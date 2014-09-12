@@ -5,50 +5,40 @@
  */
 namespace Slince\Event;
 
-class Event
+class Event extends AbstractEvent
 {
 
-    public $cancelBubble = false;
+    /**
+     * 额外参数
+     *
+     * @var array
+     */
+    private $_arguments = [];
 
-    private $_name;
-
-    private $_dispatcher;
-
-    private $_subject;
-
-    private $_arguments;
-
-    function __construct(Dispatcher $dispatcher, $arguments)
+    function __construct($name, Dispatcher $dispatcher = null, $arguments = [])
     {
+        $this->_name = $name;
         $this->_dispatcher = $dispatcher;
         $this->_arguments = $arguments;
     }
 
-    function getName()
-    {
-        return $this->_name;
-    }
-
-    function setName($name)
-    {
-        $this->_name = $name;
-    }
-
-    function setDispatcher($dispatcher)
-    {
-        $this->_dispatcher = $dispatcher;
-    }
-
-    function getDispatcher()
-    {
-        return $this->_dispatcher;
-    }
-
-    function setArguments($name, $value)
+    /**
+     * 设置参数
+     *
+     * @param string $name            
+     * @param mixed $value            
+     */
+    function setArgument($name, $value)
     {
         $this->_arguments[$name] = $value;
     }
 
+    /**
+     * 获取参数
+     *
+     * @param string $name            
+     * @return mixed
+     */
     function getArgument($name)
     {
         return isset($this->_arguments[$name]) ? $this->_arguments[$name] : null;

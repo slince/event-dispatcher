@@ -11,6 +11,11 @@
             "email": "taosikai@yeah.net"
         }
     ],
+    "autoload": {
+        "psr-4": {
+            "Slince\\Event\\": "src/"
+        }
+    },
     "minimum-stability": "dev",
     "require": {
         "php": "~5.4"
