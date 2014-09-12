@@ -58,7 +58,7 @@ class Dispatcher
                     break;
                 }
                 if (is_callable($listener)) {
-                    call_user_func_array($listener, $event);
+                    call_user_func($listener, $event);
                 } elseif ($listener instanceof ListenerInterface) {
                     $listener->handle($event);
                 }
