@@ -15,10 +15,10 @@ class Event extends AbstractEvent
      */
     private $_arguments = [];
 
-    function __construct($name, Dispatcher $dispatcher = null, $arguments = [])
+    function __construct($name, $subject = null, $arguments = [])
     {
         $this->_name = $name;
-        $this->_dispatcher = $dispatcher;
+        $this->_subject = $subject;
         $this->_arguments = $arguments;
     }
 

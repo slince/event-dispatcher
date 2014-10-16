@@ -61,7 +61,7 @@ abstract class AbstractEvent
      *
      * @param Dispatcher $dispatcher            
      */
-    function setDispatcher($dispatcher)
+    function setDispatcher(Dispatcher $dispatcher)
     {
         $this->_dispatcher = $dispatcher;
     }

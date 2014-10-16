@@ -50,7 +50,8 @@ class Dispatcher
     function dispatch($eventName, AbstractEvent $event = null)
     {
         if (is_null($event)) {
-            $event = new Event($eventName, $this);
+            $event = new Event($eventName);
+            $event->setDispatcher($this);
         }
         if (isset($this->_listeners[$eventName])) {
             foreach ($this->_listeners[$eventName] as $listener) {
