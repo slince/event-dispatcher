@@ -14,6 +14,16 @@
 
 ### 用法
 
+基本用法：
+
+    $dispatcher = new Slince\Event\Dispatcher();
+    $dispatcher->attach('User.login.success', function ($e) {
+        echo '恭喜!!';
+    });
+    $dispatcher->dispatch('User.login.success');
+
+监听者应该是一个闭包或者实现ListenerInterface接口的类的实例。事件冒泡的应用：
+
     Class User
     {
         private $_dispatcher;
@@ -33,10 +43,15 @@
     $dispatcher = new Slince\Event\Dispatcher();
     $dispatcher->attach('User.login.success', function ($e) {
         echo '恭喜!!';
+        //如果需要阻止接下来的日志记录操作
+        $e->cancelBubble = true;
+    });
+    $dispatcher->attach('User.login.success', function ($e) {
+        //登录日志记录操作
     });
 
     $user = new User($dispatcher);
     $user->login();
 
-监听者应该是一个闭包或者实现ListenerInterface接口的类的实例。
+
 更多特性等待您去探索！
