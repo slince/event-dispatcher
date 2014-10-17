@@ -22,7 +22,9 @@
     });
     $dispatcher->dispatch('User.login.success');
 
-监听者应该是一个闭包或者实现ListenerInterface接口的类的实例。事件冒泡的应用：
+监听者应该是一个闭包或者实现ListenerInterface接口的类的实例。
+
+事件冒泡的应用：
 
     Class User
     {
