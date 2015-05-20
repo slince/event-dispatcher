@@ -25,6 +25,17 @@ class Dispatcher
     {
         $this->_listeners[$eventName][] = $listener;
     }
+    
+    /**
+     * 绑定订阅者
+     * @param SubscriberInterface $subscriber
+     */
+    function attachSubscriber(SubscriberInterface $subscriber)
+    {
+        foreach ($subscriber->getSubscribedEvents() as $event => $callback) {
+            $this->attach($event, $callback);
+        }
+    }
 
     /**
      * 移除一个绑定的监听者
