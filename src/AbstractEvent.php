@@ -5,7 +5,7 @@
  */
 namespace Slince\Event;
 
-abstract class AbstractEvent
+abstract class AbstractEvent implements EventInterface
 {
 
     /**

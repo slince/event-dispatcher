@@ -7,5 +7,5 @@ namespace Slince\Event;
 
 interface SubscriberInterface
 {
-    function getSubscribedEvents();
+    function getEvents();
 }
