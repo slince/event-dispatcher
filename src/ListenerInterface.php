@@ -13,5 +13,5 @@ interface ListenerInterface
      *
      * @param AbstractEvent $event            
      */
-    function handle(AbstractEvent $event);
+    function handle(EventInterface $event);
 }

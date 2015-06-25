@@ -1,4 +1,8 @@
 <?php
+/**
+ * slince event dispatcher library
+ * @author Tao <taosikai@yeah.net>
+ */
 namespace Slince\Event;
 
 interface EventInterface
@@ -8,5 +12,15 @@ interface EventInterface
 
     function getName();
 
-    function setDispatcher();
+    function setDispatcher(DispatcherInterface $dispatcher);
+
+    function getDispatcher();
+    
+    function setSubject($subject);
+    
+    function getSubject();
+
+    function stopPropagation();
+
+    function isPropagationStopped();
 }

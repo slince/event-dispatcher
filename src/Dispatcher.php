@@ -1,11 +1,11 @@
 <?php
 /**
- * slince event dispatcher component
+ * slince event dispatcher library
  * @author Tao <taosikai@yeah.net>
  */
 namespace Slince\Event;
 
-class Dispatcher
+class Dispatcher implements DispatcherInterface
 {
 
     /**
@@ -13,33 +13,51 @@ class Dispatcher
      *
      * @var array
      */
-    private $_listeners = [];
+    protected $_listeners = [];
 
     /**
-     * 绑定一个监听者
-     *
-     * @param string $eventName            
-     * @param mixed $listener            
+     * (non-PHPdoc)
+     * 
+     * @see \Slince\Event\DispatcherInterface::attach()
      */
-    function attach($eventName, $listener)
+    function attach($eventName, \Closure $callable, $priority = self::PRIORITY_DEFAULT)
     {
-        $this->_listeners[$eventName][] = $listener;
+        $listener = CallbackListener::newFromCallable($callable);
+        $this->addListener($eventName, $listener, $priority);
+    }
+
+    /**
+     * (non-PHPdoc)
+     * 
+     * @see \Slince\Event\DispatcherInterface::addListener()
+     */
+    function addListener($eventName, ListenerInterface $listener, $priority = self::PRIORITY_DEFAULT)
+    {
+        if (empty($this->_listeners[$eventName])) {
+            $this->_listeners[$eventName] = new \SplPriorityQueue();
+        }
+        $this->_listeners[$eventName]->insert($listener, $priority);
+    }
+
+    /**
+     * (non-PHPdoc)
+     * @see \Slince\Event\DispatcherInterface::addSubscriber()
+     */
+    function addSubscriber(SubscriberInterface $subscriber)
+    {
+        foreach ($subscriber->getEvents() as $eventName => $callback) {
+            $this->attach($eventName, $callback);
+        }
     }
     
-    /**
-     * 绑定订阅者
-     * @param SubscriberInterface $subscriber
-     */
-    function attachSubscriber(SubscriberInterface $subscriber)
+    function removeListener($eventName, ListenerInterface $listener)
     {
-        foreach ($subscriber->getSubscribedEvents() as $event => $callback) {
-            $this->attach($event, $callback);
-        }
+        
     }
 
     /**
      * 移除一个绑定的监听者
-     * 
+     *
      * @param string $eventName            
      * @param mixed $listener            
      */

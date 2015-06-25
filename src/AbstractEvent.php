@@ -10,14 +10,14 @@ abstract class AbstractEvent implements EventInterface
 
     /**
      * 是否阻止冒泡
-     * 
+     *
      * @var boolean
      */
-    public $cancelBubble = false;
+    protected $_propagationStopped = false;
 
     /**
      * 事件名
-     * 
+     *
      * @var string
      */
     protected $_name;
@@ -36,10 +36,17 @@ abstract class AbstractEvent implements EventInterface
      */
     protected $_subject;
 
+    function __construct($name, $subject, DispatcherInterface $dispatcher = null)
+    {
+        $this->_name = $name;
+        $this->_subject = $subject;
+        $this->_dispatcher = $dispatcher;
+    }
+
     /**
-     * 获取事件名
+     * (non-PHPdoc)
      *
-     * @return string
+     * @see \Slince\Event\EventInterface::getName()
      */
     function getName()
     {
@@ -47,9 +54,9 @@ abstract class AbstractEvent implements EventInterface
     }
 
     /**
-     * 设置事件名
+     * (non-PHPdoc)
      *
-     * @param string $name            
+     * @see \Slince\Event\EventInterface::setName()
      */
     function setName($name)
     {
@@ -57,9 +64,9 @@ abstract class AbstractEvent implements EventInterface
     }
 
     /**
-     * 设置调度器
+     * (non-PHPdoc)
      *
-     * @param Dispatcher $dispatcher            
+     * @see \Slince\Event\EventInterface::setDispatcher()
      */
     function setDispatcher(Dispatcher $dispatcher)
     {
@@ -67,9 +74,9 @@ abstract class AbstractEvent implements EventInterface
     }
 
     /**
-     * 获取调度器
-     * 
-     * @return Dispatcher
+     * (non-PHPdoc)
+     *
+     * @see \Slince\Event\EventInterface::getDispatcher()
      */
     function getDispatcher()
     {
@@ -77,9 +84,9 @@ abstract class AbstractEvent implements EventInterface
     }
 
     /**
-     * 设置主题
+     * (non-PHPdoc)
      *
-     * @param object $subject            
+     * @see \Slince\Event\EventInterface::setSubject()
      */
     function setSubject($subject)
     {
@@ -87,12 +94,33 @@ abstract class AbstractEvent implements EventInterface
     }
 
     /**
-     * 获取主题
+     * (non-PHPdoc)
      *
-     * @return object
+     * @see \Slince\Event\EventInterface::getSubject()
      */
     function getSubject()
     {
         return $this->_subject;
+    }
+
+    /**
+     * (non-PHPdoc)
+     * 
+     * @see \Slince\Event\EventInterface::stopPropagation()
+     */
+    function stopPropagation()
+    {
+        $this->_propagationStopped = true;
+        return $this;
+    }
+
+    /**
+     * (non-PHPdoc)
+     * 
+     * @see \Slince\Event\EventInterface::isPropagationStopped()
+     */
+    function isPropagationStopped()
+    {
+        return $this->_propagationStopped;
     }
 }

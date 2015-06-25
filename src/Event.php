@@ -13,12 +13,11 @@ class Event extends AbstractEvent
      *
      * @var array
      */
-    private $_arguments = [];
+    protected $_arguments = [];
 
-    function __construct($name, $subject = null, $arguments = [])
+    function __construct($name, $subject, DispatcherInterface $dispatcher = null, $arguments = [])
     {
-        $this->_name = $name;
-        $this->_subject = $subject;
+        parent::__construct($name, $subject, $dispatcher);
         $this->_arguments = $arguments;
     }
 
