@@ -68,7 +68,7 @@ abstract class AbstractEvent implements EventInterface
      *
      * @see \Slince\Event\EventInterface::setDispatcher()
      */
-    function setDispatcher(Dispatcher $dispatcher)
+    function setDispatcher(DispatcherInterface $dispatcher)
     {
         $this->_dispatcher = $dispatcher;
     }

@@ -25,8 +25,7 @@ class Dispatcher implements DispatcherInterface
         if (is_null($event)) {
             $event = new Event($eventName, null, $this);
         }
-        
-        if (isset($this->_listeners[$eventName])) {
+        if (! empty($this->_listeners[$eventName])) {
             foreach ($this->_listeners[$eventName] as $listener) {
                 if ($event->isPropagationStopped()) {
                     break;
@@ -44,7 +43,7 @@ class Dispatcher implements DispatcherInterface
     function bind($eventName, \Closure $callable, $priority = self::PRIORITY_DEFAULT)
     {
         $listener = CallbackListener::newFromCallable($callable);
-        $this->addListener($eventName, $listener, $priority);
+        return $this->addListener($eventName, $listener, $priority);
     }
 
     /**

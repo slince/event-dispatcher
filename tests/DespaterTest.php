@@ -1,12 +1,12 @@
 <?php
 use Slince\Event\Dispatcher;
 use Slince\Event\ListenerInterface;
-use Slince\Event\AbstractEvent;
+use Slince\Event\EventInterface;
 
-class DelLitener implements ListenerInterface
+class DeleteListener implements ListenerInterface
 {
 
-    function handle(AbstractEvent $event)
+    function handle(EventInterface $event)
     {
         echo 'del2';
     }
@@ -15,34 +15,23 @@ class DelLitener implements ListenerInterface
 class DispatcherTest extends PHPUnit_Framework_TestCase
 {
 
-    function tes2tAttach()
+    function getDispatcher()
     {
-        $dispatcher = new Dispatcher();
-        $dispatcher->attach('del', function ()
-        {
-            echo 'del1...';
-        });
-        $litener = new DelLitener();
-        $dispatcher->attach('del', $litener);
-        $dispatcher->dispatch('del');
+        return new Dispatcher();
     }
-
-    function tes2tDetach()
+    function testCallback()
     {
-        $dispatcher = new Dispatcher();
-        $dispatcher->attach('del', function ()
-        {
-            echo 'del1...';
+        $dispatcher = $this->getDispatcher();
+        $dispatcher->bind('delete', function($event) {
+            $event->setArgument('haveTrigger', true);
         });
-        $litener = new DelLitener();
-        $dispatcher->attach('del', function ()
-        {
-            echo 'del3...';
+        $dispatcher->bind('delete', function($event) {
+            $this->assertTrue($event->getArgument('haveTrigger'));
         });
-        $dispatcher->attach('del', $litener);
-        $dispatcher->dispatch('del');
+        $dispatcher->dispatch('delete');
     }
-    function testDelayEvent()
+    
+    function tes2tDelayEvent()
     {
         $dispatcher = new Dispatcher();
         $dispatcher->attach('del', function (AbstractEvent $event)

@@ -17,7 +17,7 @@ class CallbackListener implements ListenerInterface
 
     /**
      * 实例集
-     * 
+     *
      * @var array
      */
     private static $_listener = [];
@@ -30,7 +30,7 @@ class CallbackListener implements ListenerInterface
     /**
      * 从闭包创建当前类实例
      *
-     * @param \Closure $callback            
+     * @param \Closure $_callable            
      * @return \Slince\Event\CallbackListener
      */
     static function newFromCallable(\Closure $callable)
@@ -49,6 +49,6 @@ class CallbackListener implements ListenerInterface
      */
     function handle(EventInterface $event)
     {
-        call_user_func($this->_callback, $event);
+        call_user_func($this->_callable, $event);
     }
 }
