@@ -36,7 +36,7 @@ abstract class AbstractEvent implements EventInterface
      */
     protected $_subject;
 
-    function __construct($name, $subject, DispatcherInterface $dispatcher = null)
+    function __construct($name, $subject = null, DispatcherInterface $dispatcher = null)
     {
         $this->_name = $name;
         $this->_subject = $subject;

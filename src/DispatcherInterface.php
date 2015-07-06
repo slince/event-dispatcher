@@ -84,4 +84,11 @@ interface DispatcherInterface
      * @param SubscriberInterface $subscriber            
      */
     function removeSubscriber($eventName, SubscriberInterface $listener);
+    
+    /**
+     * 判断是否存在监听者
+     * @param string $eventName
+     * @param ListenerInterface|\Closure $listener
+     */
+    function hasListener($eventName, $listener);
 }
