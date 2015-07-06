@@ -9,15 +9,30 @@ class CallbackListener implements ListenerInterface
 {
 
     /**
+     * id
+     * 
+     * @var string
+     */
+    private $_id;
+
+    /**
      * 回调
      *
      * @var \Closure
      */
-    private $_callback;
+    private $_callable;
 
-    function __construct(\Closure $callback)
+    /**
+     * 实例集
+     * 
+     * @var array
+     */
+    private static $_listener = [];
+
+    function __construct(\Closure $callable, $id)
     {
-        $this->_callback = $callback;
+        $this->_callable = $callable;
+        $this->_id = $id;
     }
 
     /**
@@ -26,9 +41,12 @@ class CallbackListener implements ListenerInterface
      * @param \Closure $callback            
      * @return \Slince\Event\CallbackListener
      */
-    static function newFromCallable(\Closure $callable)
+    static function newFromCallable($id, \Closure $callable)
     {
-        return new self($callable);
+        if (! isset(self::$_listener[$id])) {
+            self::$_listener[$id] = new self($id, $callable);
+        }
+        return self::$_listener[$id];
     }
 
     /**

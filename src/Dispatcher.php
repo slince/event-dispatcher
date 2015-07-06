@@ -20,7 +20,7 @@ class Dispatcher implements DispatcherInterface
      * 
      * @see \Slince\Event\DispatcherInterface::dispatch()
      */
-    function dispatch($eventName, AbstractEvent $event = null)
+    function dispatch($eventName, EventInterface $event = null)
     {
         if (is_null($event)) {
             $event = new Event($eventName);
@@ -90,7 +90,9 @@ class Dispatcher implements DispatcherInterface
     }
 
     function removeListener($eventName, ListenerInterface $listener)
-    {}
+    {
+        
+    }
 
     function removeSubscriber($eventName, SubscriberInterface $listener)
     {}
