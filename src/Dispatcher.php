@@ -17,7 +17,7 @@ class Dispatcher implements DispatcherInterface
 
     /**
      * (non-PHPdoc)
-     * 
+     *
      * @see \Slince\Event\DispatcherInterface::dispatch()
      */
     function dispatch($eventName, EventInterface $event = null)
@@ -30,7 +30,10 @@ class Dispatcher implements DispatcherInterface
                 if ($event->isPropagationStopped()) {
                     break;
                 }
-                call_user_func(array($listener, 'handle'), $event);
+                call_user_func(array(
+                    $listener,
+                    'handle'
+                ), $event);
             }
         }
     }
@@ -61,7 +64,7 @@ class Dispatcher implements DispatcherInterface
 
     /**
      * (non-PHPdoc)
-     * 
+     *
      * @see \Slince\Event\DispatcherInterface::addSubscriber()
      */
     function addSubscriber(SubscriberInterface $subscriber)
@@ -73,7 +76,7 @@ class Dispatcher implements DispatcherInterface
 
     /**
      * (non-PHPdoc)
-     * 
+     *
      * @see \Slince\Event\DispatcherInterface::unbind()
      */
     function unbind($eventName, \Closure $callable)
@@ -84,6 +87,7 @@ class Dispatcher implements DispatcherInterface
 
     /**
      * (non-PHPdoc)
+     *
      * @see \Slince\Event\DispatcherInterface::removeListener()
      */
     function removeListener($eventName, ListenerInterface $listener)
@@ -96,6 +100,7 @@ class Dispatcher implements DispatcherInterface
 
     /**
      * (non-PHPdoc)
+     *
      * @see \Slince\Event\DispatcherInterface::removeSubscriber()
      */
     function removeSubscriber($eventName, SubscriberInterface $listener)
@@ -104,9 +109,28 @@ class Dispatcher implements DispatcherInterface
             $this->unbind($eventName, $callback);
         }
     }
-    
+
     /**
      * (non-PHPdoc)
+     *
+     * @see \Slince\Event\DispatcherInterface::removeAll()
+     */
+    function removeAll($eventName = null)
+    {
+        if (! is_null($eventName)) {
+            if (! empty($this->_listeners[$eventName])) {
+                $this->_listeners[$eventName]->flush();
+            }
+        } else {
+            foreach ($this->_listeners as $queue) {
+                $queue->flush();
+            }
+        }
+    }
+
+    /**
+     * (non-PHPdoc)
+     *
      * @see \Slince\Event\DispatcherInterface::hasListener()
      */
     function hasListener($eventName, $listener)
@@ -119,17 +143,25 @@ class Dispatcher implements DispatcherInterface
         }
         return $this->_listeners[$eventName]->contains($listener);
     }
-    
+
     /**
-     * 获取监听者
-     * @param string $eventName
-     * @return array
+     * (non-PHPdoc)
+     *
+     * @see \Slince\Event\DispatcherInterface::getListeners()
      */
-    function getListeners($eventName)
+    function getListeners($eventName = null)
     {
-        if (empty($this->_listeners[$eventName])) {
-            return [];
-        } 
-        return $this->_listeners[$eventName]->getAll();
+        if (! is_null($eventName)) {
+            if (empty($this->_listeners[$eventName])) {
+                return [];
+            }
+            return $this->_listeners[$eventName]->getAll();
+        } else {
+            $listeners = [];
+            foreach ($this->_listeners as $queue) {
+                $listeners = array_merge($listeners, $queue->getAll());
+            }
+            return $listeners;
+        }
     }
 }

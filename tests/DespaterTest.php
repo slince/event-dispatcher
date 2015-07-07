@@ -25,9 +25,32 @@ class DispatcherTest extends PHPUnit_Framework_TestCase
         $dispatcher->bind('delete', function($event) {
             $event->setArgument('haveTrigger', true);
         });
-        $dispatcher->bind('delete', function($event) {
+        $dispatcher->bind('delete', function(EventInterface $event) {
             $this->assertTrue($event->getArgument('haveTrigger'));
         });
+        $dispatcher->dispatch('delete');
+        //冒泡
+        $dispatcher->removeAll();
+        $dispatcher->bind('delete', function(EventInterface $event) {
+            $event->setArgument('haveTrigger', true);
+            $event->stopPropagation();
+        });
+        $dispatcher->bind('delete', function($event) {
+            $this->setExpectedException('\\Exception');
+            throw new \Exception('Propagation Stop');
+        });
+        //优先级
+        $dispatcher->removeAll();
+        $dispatcher->bind('delete', function(EventInterface $event) {
+            $event->setArgument('var', 1);
+        }, Dispatcher::PRIORITY_DEFAULT);
+        $dispatcher->bind('delete', function($event) {
+           $event->setArgument('var', 2);
+        }, Dispatcher::PRIORITY_HIGH);
+        $dispatcher->bind('delete', function($event) {
+            $this->assertEquals(1, $event->getArgument('var'));
+        }, Dispatcher::PRIORITY_LOW);
+        
         $dispatcher->dispatch('delete');
     }
     
