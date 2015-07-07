@@ -50,7 +50,13 @@ class DispatcherTest extends PHPUnit_Framework_TestCase
         $dispatcher->bind('delete', function($event) {
             $this->assertEquals(1, $event->getArgument('var'));
         }, Dispatcher::PRIORITY_LOW);
-        
+        //解绑
+        $dispatcher->removeAll();
+        $callback = function(EventInterface $event) {
+            throw new \Exception('Propagation Stop');
+        };
+        $dispatcher->bind('delete', 'callback');
+        $dispatcher->unbind('delete', 'callback');
         $dispatcher->dispatch('delete');
     }
     

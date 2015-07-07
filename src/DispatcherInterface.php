@@ -41,10 +41,10 @@ interface DispatcherInterface
      * 绑定回调监听
      *
      * @param string $eventName            
-     * @param \Closure $callable            
+     * @param mixed $callable            
      * @param int $priority            
      */
-    function bind($eventName, \Closure $callable, $priority = self::PRIORITY_DEFAULT);
+    function bind($eventName, $callable, $priority = self::PRIORITY_DEFAULT);
 
     /**
      * 绑定监听器
@@ -66,9 +66,9 @@ interface DispatcherInterface
      * 解绑回调监听
      *
      * @param string $eventName            
-     * @param \Closure $callable            
+     * @param mixed $callable            
      */
-    function unbind($eventName, \Closure $callable);
+    function unbind($eventName, $callable);
 
     /**
      * 解绑监听器
@@ -94,7 +94,7 @@ interface DispatcherInterface
      * 判断是否存在监听者
      *
      * @param string $eventName            
-     * @param ListenerInterface|\Closure $listener            
+     * @param mixed $listener            
      */
     function hasListener($eventName, $listener);
 

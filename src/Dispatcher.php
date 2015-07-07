@@ -43,7 +43,7 @@ class Dispatcher implements DispatcherInterface
      *
      * @see \Slince\Event\DispatcherInterface::bind()
      */
-    function bind($eventName, \Closure $callable, $priority = self::PRIORITY_DEFAULT)
+    function bind($eventName, $callable, $priority = self::PRIORITY_DEFAULT)
     {
         $listener = CallbackListener::newFromCallable($callable);
         return $this->addListener($eventName, $listener, $priority);
@@ -79,7 +79,7 @@ class Dispatcher implements DispatcherInterface
      *
      * @see \Slince\Event\DispatcherInterface::unbind()
      */
-    function unbind($eventName, \Closure $callable)
+    function unbind($eventName, $callable)
     {
         $listener = CallbackListener::newFromCallable($callable);
         $this->removeListener($eventName, $listener);

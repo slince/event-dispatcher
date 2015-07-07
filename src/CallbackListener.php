@@ -11,7 +11,7 @@ class CallbackListener implements ListenerInterface
     /**
      * 回调
      *
-     * @var \Closure
+     * @var mixed
      */
     private $_callable;
 
@@ -22,7 +22,7 @@ class CallbackListener implements ListenerInterface
      */
     private static $_listener = [];
 
-    function __construct(\Closure $callable)
+    function __construct($callable)
     {
         $this->_callable = $callable;
     }
@@ -30,10 +30,10 @@ class CallbackListener implements ListenerInterface
     /**
      * 从闭包创建当前类实例
      *
-     * @param \Closure $_callable            
+     * @param mixed $_callable            
      * @return \Slince\Event\CallbackListener
      */
-    static function newFromCallable(\Closure $callable)
+    static function newFromCallable($callable)
     {
         $hash = spl_object_hash($callable);
         if (! isset(self::$_listener[$hash])) {
