@@ -20,7 +20,7 @@ interface DispatcherInterface
      *
      * @var int
      */
-    const PRIORITY_DEFAULT = 100;
+    const PRIORITY_DEFAULT = 0;
 
     /**
      * 高优先级
