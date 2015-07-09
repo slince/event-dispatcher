@@ -71,11 +71,11 @@ class DispatcherTest extends PHPUnit_Framework_TestCase
     {
         //解绑
         $dispatcher = $this->getDispatcher();
-        $this->setExpectedException('\\Exception');
         $callback = function(EventInterface $event) {
             throw new \Exception('Propagation Stop');
         };
         $dispatcher->bind('delete', $callback);
+        $this->setExpectedException('\\Exception');
         $dispatcher->dispatch('delete');
         $dispatcher->unbind('delete', $callback);
         $dispatcher->dispatch('delete');
