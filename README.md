@@ -17,7 +17,7 @@
 基本用法：
 
     $dispatcher = new Slince\Event\Dispatcher();
-    $dispatcher->attach('User.login.success', function ($e) {
+    $dispatcher->bind('User.login.success', function ($e) {
         echo '恭喜!!';
     });
     $dispatcher->dispatch('User.login.success');
@@ -43,17 +43,24 @@
     }
 
     $dispatcher = new Slince\Event\Dispatcher();
-    $dispatcher->attach('User.login.success', function ($e) {
+    $dispatcher->bind('User.login.success', function ($e) {
         echo '恭喜!!';
         //如果需要阻止接下来的日志记录操作
-        $e->cancelBubble = true;
+        $e->stopPropagation();
     });
-    $dispatcher->attach('User.login.success', function ($e) {
+    $dispatcher->bind('User.login.success', function ($e) {
         //登录日志记录操作
     });
+
+    //优先级
+    $dispatcher->bind('User.login.success', function ($e) {
+        //登录日志记录操作
+    }, Dispatcher::PRIORITY_HIGH);
 
     $user = new User($dispatcher);
     $user->login();
 
+   
+    
 
 更多...
