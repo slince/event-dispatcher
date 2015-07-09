@@ -1,4 +1,9 @@
 <?php
+use Slince\Event\DispatcherInterface;
+use Slince\Event\Dispatcher;
+use Slince\Event\SubscriberInterface;
+use Slince\Event\EventInterface;
+
 class OrderSubscriber implements SubscriberInterface
 {
 
@@ -25,11 +30,16 @@ class OrderSubscriber implements SubscriberInterface
     function onCheck(EventInterface $event)
     {
         $event->getArgument('onpass');
+        throw new \Exception();
     }
 }
 
 class Order
 {
+    /**
+     * 
+     * @var DispatcherInterface
+     */
     private $_dispatcher;
     
     function __construct(DispatcherInterface $dispatcher)
@@ -40,7 +50,21 @@ class Order
     }
     function save()
     {
-
+        $this->_dispatcher->dispatch('save');
+    }
+    function handle()
+    {
+        $this->_dispatcher->dispatch('handle');
+    }
+    function check()
+    {
+        $this->_dispatcher->dispatch('check');
+    }
+    function run()
+    {
+        $this->save();
+        $this->handle();
+        $this->check();
     }
 }
 
@@ -55,6 +79,7 @@ class SubscriberTest extends PHPUnit_Framework_TestCase
     {
         $dispatcher = $this->getDispatcher();
         $order = new Order($dispatcher);
+        $this->setExpectedException('\\Exception');
         $order->run();
     }
 }
