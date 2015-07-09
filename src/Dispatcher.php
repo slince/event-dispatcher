@@ -45,6 +45,9 @@ class Dispatcher implements DispatcherInterface
      */
     function bind($eventName, $callable, $priority = self::PRIORITY_DEFAULT)
     {
+        if (! is_callable($callable)) {
+            return;
+        }
         $listener = CallbackListener::newFromCallable($callable);
         return $this->addListener($eventName, $listener, $priority);
     }
@@ -69,8 +72,8 @@ class Dispatcher implements DispatcherInterface
      */
     function addSubscriber(SubscriberInterface $subscriber)
     {
-        foreach ($subscriber->getEvents() as $eventName => $callback) {
-            $this->bind($eventName, $callback);
+        foreach ($subscriber->getEvents() as $eventName => $method) {
+            $this->bind($eventName, array($subscriber, $method));
         }
     }
 
@@ -93,7 +96,7 @@ class Dispatcher implements DispatcherInterface
     function removeListener($eventName, ListenerInterface $listener)
     {
         if (empty($this->_listeners[$eventName])) {
-            return false;
+            return;
         }
         $this->_listeners[$eventName]->detach($listener);
     }
@@ -103,10 +106,10 @@ class Dispatcher implements DispatcherInterface
      *
      * @see \Slince\Event\DispatcherInterface::removeSubscriber()
      */
-    function removeSubscriber($eventName, SubscriberInterface $listener)
+    function removeSubscriber($eventName, SubscriberInterface $subscriber)
     {
         foreach ($subscriber->getEvents() as $eventName => $callback) {
-            $this->unbind($eventName, $callback);
+            $this->unbind($eventName, array($subscriber, $method));
         }
     }
 

@@ -2,14 +2,22 @@
 use Slince\Event\Dispatcher;
 use Slince\Event\ListenerInterface;
 use Slince\Event\EventInterface;
+use Slince\Event\SubscriberInterface;
 
-class DeleteListener implements ListenerInterface
+class DelListener implements ListenerInterface
 {
 
     function handle(EventInterface $event)
     {
-        echo 'del2';
+        throw new \Exception('Propagation Stop');
     }
+}
+
+class OrderSubscriber implements SubscriberInterface
+{
+
+    function getEvents()
+    {}
 }
 
 class DispatcherTest extends PHPUnit_Framework_TestCase
@@ -29,18 +37,24 @@ class DispatcherTest extends PHPUnit_Framework_TestCase
             $this->assertTrue($event->getArgument('haveTrigger'));
         });
         $dispatcher->dispatch('delete');
+    }
+    function testPropagation()
+    {
         //冒泡
-        $dispatcher->removeAll();
+        $dispatcher = $this->getDispatcher();
         $dispatcher->bind('delete', function(EventInterface $event) {
             $event->setArgument('haveTrigger', true);
             $event->stopPropagation();
         });
         $dispatcher->bind('delete', function($event) {
-            $this->setExpectedException('\\Exception');
             throw new \Exception('Propagation Stop');
         });
+        $dispatcher->dispatch('delete');
+    }
+    function testPriority()
+    {
         //优先级
-        $dispatcher->removeAll();
+        $dispatcher = $this->getDispatcher();
         $dispatcher->bind('delete', function(EventInterface $event) {
             $event->setArgument('var', 1);
         }, Dispatcher::PRIORITY_DEFAULT);
@@ -50,15 +64,32 @@ class DispatcherTest extends PHPUnit_Framework_TestCase
         $dispatcher->bind('delete', function($event) {
             $this->assertEquals(1, $event->getArgument('var'));
         }, Dispatcher::PRIORITY_LOW);
+        $dispatcher->dispatch('delete');
+    }
+    
+    function testUnbind()
+    {
         //解绑
-        $dispatcher->removeAll();
+        $dispatcher = $this->getDispatcher();
+        $this->setExpectedException('\\Exception');
         $callback = function(EventInterface $event) {
             throw new \Exception('Propagation Stop');
         };
-        $dispatcher->bind('delete', 'callback');
-        $dispatcher->unbind('delete', 'callback');
+        $dispatcher->bind('delete', $callback);
+        $dispatcher->dispatch('delete');
+        $dispatcher->unbind('delete', $callback);
         $dispatcher->dispatch('delete');
     }
+    
+    function testListener()
+    {
+        $dispatcher = $this->getDispatcher();
+        $delListener = new DelListener();
+        $this->setExpectedException('\\Exception');
+        $dispatcher->addListener('delete', $delListener);
+        $dispatcher->dispatch('delete');
+    }
+    
     
     function tes2tDelayEvent()
     {

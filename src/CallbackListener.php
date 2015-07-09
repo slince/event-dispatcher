@@ -35,7 +35,11 @@ class CallbackListener implements ListenerInterface
      */
     static function newFromCallable($callable)
     {
-        $hash = spl_object_hash($callable);
+        if ($callable instanceof \Closure) {
+            $hash = spl_object_hash($callable);
+        } else {
+            $hash = md5(serialize($callable));
+        }
         if (! isset(self::$_listener[$hash])) {
             self::$_listener[$hash] = new self($callable);
         }
