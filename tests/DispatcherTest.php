@@ -3,6 +3,7 @@ use Slince\Event\Dispatcher;
 use Slince\Event\ListenerInterface;
 use Slince\Event\EventInterface;
 use Slince\Event\SubscriberInterface;
+use Slince\Event\DispatcherInterface;
 
 class DelListener implements ListenerInterface
 {
@@ -11,13 +12,6 @@ class DelListener implements ListenerInterface
     {
         throw new \Exception('Propagation Stop');
     }
-}
-
-class OrderSubscriber implements SubscriberInterface
-{
-
-    function getEvents()
-    {}
 }
 
 class DispatcherTest extends PHPUnit_Framework_TestCase
@@ -89,7 +83,6 @@ class DispatcherTest extends PHPUnit_Framework_TestCase
         $dispatcher->addListener('delete', $delListener);
         $dispatcher->dispatch('delete');
     }
-    
     
     function tes2tDelayEvent()
     {
