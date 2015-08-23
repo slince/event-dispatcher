@@ -13,14 +13,14 @@ class CallbackListener implements ListenerInterface
      *
      * @var mixed
      */
-    private $_callable;
+    protected $_callable;
 
     /**
      * 实例集
      *
      * @var array
      */
-    private static $_listener = [];
+    protected static $_listeners = [];
 
     function __construct($callable)
     {
@@ -35,15 +35,35 @@ class CallbackListener implements ListenerInterface
      */
     static function newFromCallable($callable)
     {
-        if ($callable instanceof \Closure) {
-            $hash = spl_object_hash($callable);
-        } else {
-            $hash = md5(serialize($callable));
+        $listener = new static($callable);
+        self::$_listener[] = $listener;
+        return $listener;
+    }
+
+    /**
+     * 查看callable对应的CallbackListener实例
+     *
+     * @param mixed $callable            
+     * @return CallbackListener|NULL
+     */
+    static function getFromCallable($callable)
+    {
+        foreach (self::$_listener as $listener) {
+            if ($listener->getCallable == $callable) {
+                return $listener;
+            }
         }
-        if (! isset(self::$_listener[$hash])) {
-            self::$_listener[$hash] = new self($callable);
-        }
-        return self::$_listener[$hash];
+        return null;
+    }
+
+    /**
+     * 获取calleable
+     *
+     * @return \Slince\Event\mixed
+     */
+    function getCallable()
+    {
+        return $this->_callable;
     }
 
     /**

@@ -84,8 +84,10 @@ class Dispatcher implements DispatcherInterface
      */
     function unbind($eventName, $callable)
     {
-        $listener = CallbackListener::newFromCallable($callable);
-        $this->removeListener($eventName, $listener);
+        $listener = CallbackListener::getFromCallable($callable);
+        if (! is_null($listener)) {
+            $this->removeListener($eventName, $listener);
+        }
     }
 
     /**
