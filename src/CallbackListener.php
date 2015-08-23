@@ -36,7 +36,7 @@ class CallbackListener implements ListenerInterface
     static function newFromCallable($callable)
     {
         $listener = new static($callable);
-        self::$_listener[] = $listener;
+        self::$_listeners[] = $listener;
         return $listener;
     }
 
@@ -48,7 +48,7 @@ class CallbackListener implements ListenerInterface
      */
     static function getFromCallable($callable)
     {
-        foreach (self::$_listener as $listener) {
+        foreach (self::$_listeners as $listener) {
             if ($listener->getCallable == $callable) {
                 return $listener;
             }
