@@ -13,7 +13,7 @@
     ],
     "autoload": {
         "psr-4": {
-            "Slince\\Event\\": "src/"
+            "Slince\\Event\\": ""
         }
     },
     "minimum-stability": "dev",
