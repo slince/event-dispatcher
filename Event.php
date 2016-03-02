@@ -1,6 +1,7 @@
 <?php
 /**
  * slince event dispatcher library
+ * 
  * @author Tao <taosikai@yeah.net>
  */
 namespace Slince\Event;
@@ -15,7 +16,7 @@ class Event extends AbstractEvent
      */
     protected $_arguments = [];
 
-    function __construct($name, $subject, DispatcherInterface $dispatcher = null, $arguments = [])
+    function __construct($name, $subject, DispatcherInterface $dispatcher = null, array $arguments = [])
     {
         parent::__construct($name, $subject, $dispatcher);
         $this->_arguments = $arguments;
@@ -24,8 +25,8 @@ class Event extends AbstractEvent
     /**
      * 设置参数
      *
-     * @param string $name            
-     * @param mixed $value            
+     * @param string $name
+     * @param mixed $value
      */
     function setArgument($name, $value)
     {
@@ -35,11 +36,31 @@ class Event extends AbstractEvent
     /**
      * 获取参数
      *
-     * @param string $name            
+     * @param string $name
      * @return mixed
      */
     function getArgument($name)
     {
         return isset($this->_arguments[$name]) ? $this->_arguments[$name] : null;
+    }
+
+    /**
+     * 批量设置参数
+     *
+     * @param array $arguments
+     */
+    function setArguments(array $arguments)
+    {
+        $this->_arguments = $arguments;
+    }
+
+    /**
+     * 批量获取参数
+     *
+     * @return array
+     */
+    function getArguments()
+    {
+        return $this->_arguments;
     }
 }
