@@ -1,4 +1,4 @@
-# Event dispatcher component
+# Event Dispatcher Component
 
 [![Build Status](https://travis-ci.org/slince/event.svg?branch=master)](https://travis-ci.org/slince/event)
 [![Latest Stable Version](https://poser.pugx.org/slince/event/v/stable)](https://packagist.org/packages/slince/event)
