@@ -30,10 +30,7 @@ class Dispatcher implements DispatcherInterface
                 if ($event->isPropagationStopped()) {
                     break;
                 }
-                call_user_func(array(
-                    $listener,
-                    'handle'
-                ), $event);
+                call_user_func([$listener, 'handle'], $event);
             }
         }
     }
@@ -73,7 +70,7 @@ class Dispatcher implements DispatcherInterface
     function addSubscriber(SubscriberInterface $subscriber)
     {
         foreach ($subscriber->getEvents() as $eventName => $method) {
-            $this->bind($eventName, array($subscriber, $method));
+            $this->bind($eventName, [$subscriber, $method]);
         }
     }
 
@@ -98,7 +95,7 @@ class Dispatcher implements DispatcherInterface
     function removeListener($eventName, ListenerInterface $listener)
     {
         if (empty($this->listeners[$eventName])) {
-            return;
+            return false;
         }
         $this->listeners[$eventName]->detach($listener);
     }
@@ -111,7 +108,7 @@ class Dispatcher implements DispatcherInterface
     function removeSubscriber(SubscriberInterface $subscriber)
     {
         foreach ($subscriber->getEvents() as $eventName => $method) {
-            $this->unbind($eventName, array($subscriber, $method));
+            $this->unbind($eventName, [$subscriber, $method]);
         }
     }
 
@@ -157,14 +154,11 @@ class Dispatcher implements DispatcherInterface
     function getListeners($eventName = null)
     {
         if (!is_null($eventName)) {
-            if (empty($this->listeners[$eventName])) {
-                return [];
-            }
-            return $this->listeners[$eventName]->getAll();
+            return empty($this->listeners[$eventName]) ? [] : $this->listeners[$eventName]->getAll();
         } else {
             $listeners = [];
             foreach ($this->listeners as $queue) {
-                $listeners = array_merge($listeners, $queue->getAll());
+                $listeners += $queue->getAll();
             }
             return $listeners;
         }

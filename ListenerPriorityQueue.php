@@ -12,7 +12,7 @@ class ListenerPriorityQueue implements \IteratorAggregate
      *
      * @var \SplObjectStorage
      */
-    private $storage;
+    public $storage;
 
     /**
      *
@@ -76,6 +76,7 @@ class ListenerPriorityQueue implements \IteratorAggregate
      */
     protected function refreshQueue()
     {
+        $this->storage->rewind();
         $this->queue = new \SplPriorityQueue();
         foreach ($this->storage as $listener) {
             $priority = $this->storage->getInfo();
@@ -90,7 +91,11 @@ class ListenerPriorityQueue implements \IteratorAggregate
      */
     function getIterator()
     {
-        return $this->queue;
+        $queue = clone $this->queue;
+        if (!$queue->isEmpty()) {
+            $queue->top();
+        }
+        return $queue;
     }
 
     /**
@@ -101,7 +106,7 @@ class ListenerPriorityQueue implements \IteratorAggregate
     function getAll()
     {
         $listeners = [];
-        foreach ($this->queue as $listener) {
+        foreach ($this->getIterator() as $listener) {
             $listeners[] = $listener;
         }
         return $listeners;

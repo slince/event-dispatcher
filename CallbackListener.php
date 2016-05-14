@@ -16,7 +16,7 @@ class CallbackListener implements ListenerInterface
     protected $callable;
 
     /**
-     * 实例集
+     * 实例集合
      *
      * @var array
      */
@@ -54,6 +54,14 @@ class CallbackListener implements ListenerInterface
             }
         }
         return null;
+    }
+
+    /**
+     * 清空记录的listener
+     */
+    static function clearListeners()
+    {
+        self::$listeners = [];
     }
 
     /**

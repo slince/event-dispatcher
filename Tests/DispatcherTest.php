@@ -1,6 +1,7 @@
 <?php
 namespace Slince\Event\Tests;
 
+use Slince\Event\CallbackListener;
 use Slince\Event\Dispatcher;
 use Slince\Event\Event;
 use Slince\Event\ListenerInterface;
@@ -70,32 +71,34 @@ class DispatcherTest extends \PHPUnit_Framework_TestCase
     {
         $this->dispatcher->removeAll();
         $this->assertCount(0, $this->dispatcher->getListeners(self::EVENT_FOOL1));
-        $this->dispatcher->bind(self::EVENT_FOOL1, function () {
+        $callback = function () {
             return true;
-        });
+        };
+        $this->dispatcher->bind(self::EVENT_FOOL1, $callback);
         $this->assertCount(1, $this->dispatcher->getListeners(self::EVENT_FOOL1));
-        $this->dispatcher->unbind(self::EVENT_FOOL1, function () {
-            return true;
-        });
+        $this->dispatcher->unbind(self::EVENT_FOOL1, $callback);
         $this->assertCount(0, $this->dispatcher->getListeners(self::EVENT_FOOL1));
     }
 
     function testRemoveListener()
     {
         $this->dispatcher->removeAll();
-        $this->dispatcher->addListener(self::EVENT_FOOL2, new Listener());
+        $listener = new Listener();
+        $this->dispatcher->addListener(self::EVENT_FOOL2, $listener);
         $this->assertCount(1, $this->dispatcher->getListeners(self::EVENT_FOOL2));
-        $this->dispatcher->removeListener(self::EVENT_FOOL2, new Listener());
+        $this->dispatcher->removeListener(self::EVENT_FOOL2, $listener);
         $this->assertCount(0, $this->dispatcher->getListeners(self::EVENT_FOOL2));
     }
 
     function testRemoveScriber()
     {
         $this->dispatcher->removeAll();
-        $this->dispatcher->addSubscriber(new Subscriber());
+        CallbackListener::clearListeners();
+        $subscriber = new Subscriber();
+        $this->dispatcher->addSubscriber($subscriber);
         $this->assertCount(1, $this->dispatcher->getListeners(self::EVENT_FOOL1));
         $this->assertCount(1, $this->dispatcher->getListeners(self::EVENT_FOOL2));
-        $this->dispatcher->removeSubscriber(new Subscriber());
+        $this->dispatcher->removeSubscriber($subscriber);
         $this->assertCount(0, $this->dispatcher->getListeners(self::EVENT_FOOL1));
         $this->assertCount(0, $this->dispatcher->getListeners(self::EVENT_FOOL2));
     }
