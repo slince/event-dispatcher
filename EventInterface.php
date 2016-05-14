@@ -20,17 +20,6 @@ interface EventInterface
     function getName();
 
     /**
-     * 设置调度器
-     * @param DispatcherInterface $dispatcher
-     */
-    function setDispatcher(DispatcherInterface $dispatcher);
-
-    /**
-     * 获取调度器
-     */
-    function getDispatcher();
-    
-    /**
      * 设置subject
      * @param string $subject
      */
