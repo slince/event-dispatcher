@@ -5,7 +5,7 @@
  */
 namespace Slince\Event;
 
-class Event implements EventInterface
+class Event
 {
     /**
      * 事件名
@@ -42,10 +42,10 @@ class Event implements EventInterface
         $this->arguments = $arguments;
     }
 
+
     /**
-     * (non-PHPdoc)
-     *
-     * @see \Slince\Event\EventInterface::getName()
+     * 获取事件名
+     * @return string
      */
     function getName()
     {
@@ -53,29 +53,28 @@ class Event implements EventInterface
     }
 
     /**
-     * (non-PHPdoc)
-     *
-     * @see \Slince\Event\EventInterface::setName()
+     * 设置事件名
+     * @param $name
      */
     function setName($name)
     {
         $this->name = $name;
     }
 
+
     /**
-     * (non-PHPdoc)
-     *
-     * @see \Slince\Event\EventInterface::setSubject()
+     * 设置subject
+     * @param $subject
      */
     function setSubject($subject)
     {
         $this->subject = $subject;
     }
 
+
     /**
-     * (non-PHPdoc)
-     *
-     * @see \Slince\Event\EventInterface::getSubject()
+     * 获取subject
+     * @return null|object
      */
     function getSubject()
     {
@@ -125,9 +124,8 @@ class Event implements EventInterface
     }
 
     /**
-     * (non-PHPdoc)
-     * 
-     * @see \Slince\Event\EventInterface::stopPropagation()
+     * 阻止事件冒泡
+     * @return $this
      */
     function stopPropagation()
     {
@@ -136,9 +134,8 @@ class Event implements EventInterface
     }
 
     /**
-     * (non-PHPdoc)
-     * 
-     * @see \Slince\Event\EventInterface::isPropagationStopped()
+     * 是否阻止事件冒泡
+     * @return bool
      */
     function isPropagationStopped()
     {

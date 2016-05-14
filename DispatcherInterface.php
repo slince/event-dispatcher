@@ -13,7 +13,7 @@ interface DispatcherInterface
      *
      * @var int
      */
-    const PRIORITY_LOW = - 100;
+    const PRIORITY_LOW = -100;
 
     /**
      * 默认优先级
@@ -32,58 +32,58 @@ interface DispatcherInterface
     /**
      * 触发事件
      *
-     * @param string $eventName            
-     * @param EventInterface $event            
+     * @param string $eventName
+     * @param Event $event
      */
-    function dispatch($eventName, EventInterface $event = null);
+    function dispatch($eventName, Event $event = null);
 
     /**
      * 绑定回调监听
      *
-     * @param string $eventName            
-     * @param mixed $callable            
-     * @param int $priority            
+     * @param string $eventName
+     * @param mixed $callable
+     * @param int $priority
      */
     function bind($eventName, $callable, $priority = self::PRIORITY_DEFAULT);
 
     /**
      * 绑定监听器
      *
-     * @param string $eventName            
-     * @param ListenerInterface $listener            
-     * @param int $priority            
+     * @param string $eventName
+     * @param ListenerInterface $listener
+     * @param int $priority
      */
     function addListener($eventName, ListenerInterface $listener, $priority = self::PRIORITY_DEFAULT);
 
     /**
      * 绑定订阅者
      *
-     * @param SubscriberInterface $subscriber            
+     * @param SubscriberInterface $subscriber
      */
     function addSubscriber(SubscriberInterface $subscriber);
 
     /**
      * 解绑回调监听
      *
-     * @param string $eventName            
-     * @param mixed $callable            
+     * @param string $eventName
+     * @param mixed $callable
      */
     function unbind($eventName, $callable);
 
     /**
      * 解绑监听器
      *
-     * @param string $eventName            
-     * @param ListenerInterface $listener            
+     * @param string $eventName
+     * @param ListenerInterface $listener
      */
     function removeListener($eventName, ListenerInterface $listener);
 
     /**
      * 解绑订阅者
      *
-     * @param SubscriberInterface $subscriber            
+     * @param SubscriberInterface $subscriber
      */
-    function removeSubscriber($eventName, SubscriberInterface $listener);
+    function removeSubscriber(SubscriberInterface $listener);
 
     /**
      * 解绑所有监听者
@@ -93,15 +93,15 @@ interface DispatcherInterface
     /**
      * 判断是否存在监听者
      *
-     * @param string $eventName            
-     * @param mixed $listener            
+     * @param string $eventName
+     * @param mixed $listener
      */
     function hasListener($eventName, $listener);
 
     /**
      * 获取监听者
      *
-     * @param string $eventName            
+     * @param string $eventName
      * @return array
      */
     function getListeners($eventName = null);

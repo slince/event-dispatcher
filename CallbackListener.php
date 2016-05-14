@@ -13,43 +13,43 @@ class CallbackListener implements ListenerInterface
      *
      * @var mixed
      */
-    protected $_callable;
+    protected $callable;
 
     /**
      * 实例集
      *
      * @var array
      */
-    protected static $_listeners = [];
+    protected static $listeners = [];
 
     function __construct($callable)
     {
-        $this->_callable = $callable;
+        $this->callable = $callable;
     }
 
     /**
      * 从闭包创建当前类实例
      *
-     * @param mixed $_callable            
-     * @return \Slince\Event\CallbackListener
+     * @param mixed $callable
+     * @return CallbackListener
      */
-    static function newFromCallable($callable)
+    static function createFromCallable($callable)
     {
         $listener = new static($callable);
-        self::$_listeners[] = $listener;
+        self::$listeners[] = $listener;
         return $listener;
     }
 
     /**
      * 查看callable对应的CallbackListener实例
      *
-     * @param mixed $callable            
+     * @param mixed $callable
      * @return CallbackListener|NULL
      */
     static function getFromCallable($callable)
     {
-        foreach (self::$_listeners as $listener) {
-            if ($listener->getCallable == $callable) {
+        foreach (self::$listeners as $listener) {
+            if ($listener->getCallable() == $callable) {
                 return $listener;
             }
         }
@@ -63,16 +63,16 @@ class CallbackListener implements ListenerInterface
      */
     function getCallable()
     {
-        return $this->_callable;
+        return $this->callable;
     }
 
     /**
-     * (non-PHPdoc)
+     * 响应事件
      *
-     * @see \Slince\Event\ListenerInterface::handle()
+     * @param Event $event
      */
-    function handle(EventInterface $event)
+    function handle(Event $event)
     {
-        call_user_func($this->_callable, $event);
+        call_user_func($this->callable, $event);
     }
 }

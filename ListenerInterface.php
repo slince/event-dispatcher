@@ -11,7 +11,7 @@ interface ListenerInterface
     /**
      * 响应事件
      *
-     * @param AbstractEvent $event            
+     * @param Event $event
      */
-    function handle(EventInterface $event);
+    function handle(Event $event);
 }

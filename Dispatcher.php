@@ -13,20 +13,20 @@ class Dispatcher implements DispatcherInterface
      *
      * @var array
      */
-    protected $_listeners = [];
+    protected $listeners = [];
 
     /**
      * (non-PHPdoc)
      *
      * @see \Slince\Event\DispatcherInterface::dispatch()
      */
-    function dispatch($eventName, EventInterface $event = null)
+    function dispatch($eventName, Event $event = null)
     {
         if (is_null($event)) {
-            $event = new Event($eventName, null, $this);
+            $event = new Event($eventName, null);
         }
-        if (! empty($this->_listeners[$eventName])) {
-            foreach ($this->_listeners[$eventName] as $listener) {
+        if (!empty($this->listeners[$eventName])) {
+            foreach ($this->listeners[$eventName] as $listener) {
                 if ($event->isPropagationStopped()) {
                     break;
                 }
@@ -45,10 +45,10 @@ class Dispatcher implements DispatcherInterface
      */
     function bind($eventName, $callable, $priority = self::PRIORITY_DEFAULT)
     {
-        if (! is_callable($callable)) {
+        if (!is_callable($callable)) {
             return;
         }
-        $listener = CallbackListener::newFromCallable($callable);
+        $listener = CallbackListener::createFromCallable($callable);
         return $this->addListener($eventName, $listener, $priority);
     }
 
@@ -59,10 +59,10 @@ class Dispatcher implements DispatcherInterface
      */
     function addListener($eventName, ListenerInterface $listener, $priority = self::PRIORITY_DEFAULT)
     {
-        if (empty($this->_listeners[$eventName])) {
-            $this->_listeners[$eventName] = new ListenerPriorityQueue();
+        if (empty($this->listeners[$eventName])) {
+            $this->listeners[$eventName] = new ListenerPriorityQueue();
         }
-        $this->_listeners[$eventName]->insert($listener, $priority);
+        $this->listeners[$eventName]->insert($listener, $priority);
     }
 
     /**
@@ -85,7 +85,7 @@ class Dispatcher implements DispatcherInterface
     function unbind($eventName, $callable)
     {
         $listener = CallbackListener::getFromCallable($callable);
-        if (! is_null($listener)) {
+        if (!is_null($listener)) {
             $this->removeListener($eventName, $listener);
         }
     }
@@ -97,10 +97,10 @@ class Dispatcher implements DispatcherInterface
      */
     function removeListener($eventName, ListenerInterface $listener)
     {
-        if (empty($this->_listeners[$eventName])) {
+        if (empty($this->listeners[$eventName])) {
             return;
         }
-        $this->_listeners[$eventName]->detach($listener);
+        $this->listeners[$eventName]->detach($listener);
     }
 
     /**
@@ -108,9 +108,9 @@ class Dispatcher implements DispatcherInterface
      *
      * @see \Slince\Event\DispatcherInterface::removeSubscriber()
      */
-    function removeSubscriber($eventName, SubscriberInterface $subscriber)
+    function removeSubscriber(SubscriberInterface $subscriber)
     {
-        foreach ($subscriber->getEvents() as $eventName => $callback) {
+        foreach ($subscriber->getEvents() as $eventName => $method) {
             $this->unbind($eventName, array($subscriber, $method));
         }
     }
@@ -122,12 +122,12 @@ class Dispatcher implements DispatcherInterface
      */
     function removeAll($eventName = null)
     {
-        if (! is_null($eventName)) {
-            if (! empty($this->_listeners[$eventName])) {
-                $this->_listeners[$eventName]->flush();
+        if (!is_null($eventName)) {
+            if (!empty($this->listeners[$eventName])) {
+                $this->listeners[$eventName]->flush();
             }
         } else {
-            foreach ($this->_listeners as $queue) {
+            foreach ($this->listeners as $queue) {
                 $queue->flush();
             }
         }
@@ -140,13 +140,13 @@ class Dispatcher implements DispatcherInterface
      */
     function hasListener($eventName, $listener)
     {
-        if (empty($this->_listeners[$eventName])) {
+        if (empty($this->listeners[$eventName])) {
             return false;
         }
         if (is_callable($listener)) {
             $listener = CallbackListener::newFromCallable($listener);
         }
-        return $this->_listeners[$eventName]->contains($listener);
+        return $this->listeners[$eventName]->contains($listener);
     }
 
     /**
@@ -156,14 +156,14 @@ class Dispatcher implements DispatcherInterface
      */
     function getListeners($eventName = null)
     {
-        if (! is_null($eventName)) {
-            if (empty($this->_listeners[$eventName])) {
+        if (!is_null($eventName)) {
+            if (empty($this->listeners[$eventName])) {
                 return [];
             }
-            return $this->_listeners[$eventName]->getAll();
+            return $this->listeners[$eventName]->getAll();
         } else {
             $listeners = [];
-            foreach ($this->_listeners as $queue) {
+            foreach ($this->listeners as $queue) {
                 $listeners = array_merge($listeners, $queue->getAll());
             }
             return $listeners;

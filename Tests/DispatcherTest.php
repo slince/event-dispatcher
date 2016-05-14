@@ -1,97 +1,209 @@
 <?php
-use Slince\Event\Dispatcher;
-use Slince\Event\ListenerInterface;
-use Slince\Event\EventInterface;
-use Slince\Event\SubscriberInterface;
-use Slince\Event\DispatcherInterface;
+namespace Slince\Event\Tests;
 
-class DelListener implements ListenerInterface
+use Slince\Event\Dispatcher;
+use Slince\Event\Event;
+use Slince\Event\ListenerInterface;
+use Slince\Event\SubscriberInterface;
+
+class DispatcherTest extends \PHPUnit_Framework_TestCase
 {
 
-    function handle(EventInterface $event)
+    const EVENT_FOOL1 = 'fool1';
+
+    const EVENT_FOOL2 = 'fool2';
+
+    const EVENT_FOOL3 = 'fool3';
+
+    /**
+     * @var Dispatcher
+     */
+    protected $dispatcher;
+
+
+    protected $callback;
+
+    protected $listener;
+
+    protected $subscriber;
+
+    function setUp()
+    {
+        $this->dispatcher = new Dispatcher();
+        $this->callback = function () {
+            return true;
+        };
+    }
+
+    function testInitialize()
+    {
+        $this->assertEmpty($this->dispatcher->getListeners());
+    }
+
+    function testBind()
+    {
+        $this->assertEmpty($this->dispatcher->getListeners(self::EVENT_FOOL1));
+        $this->dispatcher->bind(self::EVENT_FOOL1, function () {
+            return true;
+        });
+        $this->assertCount(1, $this->dispatcher->getListeners(self::EVENT_FOOL1));
+    }
+
+    function testAddListener()
+    {
+        $this->assertEmpty($this->dispatcher->getListeners(self::EVENT_FOOL2));
+        $this->dispatcher->addListener(self::EVENT_FOOL2, new Listener());
+        $this->assertCount(1, $this->dispatcher->getListeners(self::EVENT_FOOL2));
+    }
+
+    function testAddSubscriber()
+    {
+        $this->dispatcher->removeAll();
+        $this->assertCount(0, $this->dispatcher->getListeners(self::EVENT_FOOL1));
+        $this->assertCount(0, $this->dispatcher->getListeners(self::EVENT_FOOL2));
+        $this->dispatcher->addSubscriber(new Subscriber());
+        $this->assertCount(1, $this->dispatcher->getListeners(self::EVENT_FOOL1));
+        $this->assertCount(1, $this->dispatcher->getListeners(self::EVENT_FOOL2));
+    }
+
+    function testUnBind()
+    {
+        $this->dispatcher->removeAll();
+        $this->assertCount(0, $this->dispatcher->getListeners(self::EVENT_FOOL1));
+        $this->dispatcher->bind(self::EVENT_FOOL1, function () {
+            return true;
+        });
+        $this->assertCount(1, $this->dispatcher->getListeners(self::EVENT_FOOL1));
+        $this->dispatcher->unbind(self::EVENT_FOOL1, function () {
+            return true;
+        });
+        $this->assertCount(0, $this->dispatcher->getListeners(self::EVENT_FOOL1));
+    }
+
+    function testRemoveListener()
+    {
+        $this->dispatcher->removeAll();
+        $this->dispatcher->addListener(self::EVENT_FOOL2, new Listener());
+        $this->assertCount(1, $this->dispatcher->getListeners(self::EVENT_FOOL2));
+        $this->dispatcher->removeListener(self::EVENT_FOOL2, new Listener());
+        $this->assertCount(0, $this->dispatcher->getListeners(self::EVENT_FOOL2));
+    }
+
+    function testRemoveScriber()
+    {
+        $this->dispatcher->removeAll();
+        $this->dispatcher->addSubscriber(new Subscriber());
+        $this->assertCount(1, $this->dispatcher->getListeners(self::EVENT_FOOL1));
+        $this->assertCount(1, $this->dispatcher->getListeners(self::EVENT_FOOL2));
+        $this->dispatcher->removeSubscriber(new Subscriber());
+        $this->assertCount(0, $this->dispatcher->getListeners(self::EVENT_FOOL1));
+        $this->assertCount(0, $this->dispatcher->getListeners(self::EVENT_FOOL2));
+    }
+
+    function testRemoveAll()
+    {
+        $this->dispatcher->removeAll();
+        $this->dispatcher->addSubscriber(new Subscriber());
+        $this->dispatcher->removeAll(self::EVENT_FOOL1);
+        $this->assertEmpty($this->dispatcher->getListeners(self::EVENT_FOOL1));
+        $this->assertNotEmpty($this->dispatcher->getListeners(self::EVENT_FOOL2));
+    }
+
+    function testSimpleDispatch()
+    {
+        $this->dispatcher->removeAll();
+        $this->counter = 0;
+        $this->dispatcher->bind(self::EVENT_FOOL3, function () {
+            $this->counter++;
+        });
+        $this->dispatcher->bind(self::EVENT_FOOL3, function () {
+            $this->counter++;
+        });
+        $this->dispatcher->dispatch(self::EVENT_FOOL3);
+        $this->assertEquals(2, $this->counter);
+    }
+
+    function testDispatchWithEvent()
+    {
+        $this->dispatcher->removeAll();
+        $this->dispatcher->bind(self::EVENT_FOOL3, function (Event $event) {
+            $this->assertInstanceOf('Slince\Event\Event', $event);
+            $this->assertInstanceOf('Slince\Event\Tests\DispatcherTest', $event->getSubject());
+            $this->assertEquals(self::EVENT_FOOL3, $event->getName());
+            $this->assertEquals(self::EVENT_FOOL1, $event->getArgument('data'));
+        });
+        $this->dispatcher->dispatch(self::EVENT_FOOL3, new Event(self::EVENT_FOOL3, $this, [
+            'data' => self::EVENT_FOOL1
+        ]));
+    }
+
+    function testDispatcherWithPriority()
+    {
+        $this->dispatcher->removeAll();
+        $this->dispatcher->bind(self::EVENT_FOOL3, function (Event $event) {
+            $this->assertEquals(10, $event->getArgument('number'));
+            $event->setArgument('number', 100);
+        }, Dispatcher::PRIORITY_DEFAULT);
+
+        $this->dispatcher->bind(self::EVENT_FOOL3, function (Event $event) {
+            $this->assertEquals(100, $event->getArgument('number'));
+        }, Dispatcher::PRIORITY_LOW);
+
+        $this->dispatcher->bind(self::EVENT_FOOL3, function (Event $event) {
+            $this->assertEquals(0, $event->getArgument('number'));
+            $event->setArgument('number', 10);
+        }, Dispatcher::PRIORITY_HIGH);
+
+        $this->dispatcher->dispatch(self::EVENT_FOOL3, new Event(self::EVENT_FOOL3, $this, [
+            'number' => 0
+        ]));
+    }
+
+    function testDispatchStopPropagation()
+    {
+        $this->dispatcher->removeAll();
+        $this->dispatcher->bind(self::EVENT_FOOL3, function (Event $event) {
+            $this->assertEquals(0, $event->getArgument('number'));
+            $event->setArgument('number', 10);
+            $event->stopPropagation();
+        });
+        $this->dispatcher->bind(self::EVENT_FOOL3, function (Event $event) {
+            $event->setArgument('number', 100);
+        });
+        $event = new Event(self::EVENT_FOOL3, $this, [
+            'number' => 0
+        ]);
+        $this->dispatcher->dispatch(self::EVENT_FOOL3, $event);
+        $this->assertEquals(10, $event->getArgument('number'));
+    }
+}
+
+class Listener implements ListenerInterface
+{
+
+    function handle(Event $event)
     {
         throw new \Exception('Propagation Stop');
     }
 }
 
-class DispatcherTest extends PHPUnit_Framework_TestCase
+class Subscriber implements SubscriberInterface
 {
+    function getEvents()
+    {
+        return [
+            DispatcherTest::EVENT_FOOL1 => 'onFool1',
+            DispatcherTest::EVENT_FOOL2 => 'onFool2',
+        ];
+    }
 
-    function getDispatcher()
+    function onFool1()
     {
-        return new Dispatcher();
+        return true;
     }
-    function testCallback()
+
+    function onFool2()
     {
-        $dispatcher = $this->getDispatcher();
-        $dispatcher->bind('delete', function($event) {
-            $event->setArgument('haveTrigger', true);
-        });
-        $dispatcher->bind('delete', function(EventInterface $event) {
-            $this->assertTrue($event->getArgument('haveTrigger'));
-        });
-        $dispatcher->dispatch('delete');
-    }
-    function testPropagation()
-    {
-        //冒泡
-        $dispatcher = $this->getDispatcher();
-        $dispatcher->bind('delete', function(EventInterface $event) {
-            $event->setArgument('haveTrigger', true);
-            $event->stopPropagation();
-        });
-        $dispatcher->bind('delete', function($event) {
-            throw new \Exception('Propagation Stop');
-        });
-        $dispatcher->dispatch('delete');
-    }
-    function testPriority()
-    {
-        //优先级
-        $dispatcher = $this->getDispatcher();
-        $dispatcher->bind('delete', function(EventInterface $event) {
-            $event->setArgument('var', 1);
-        }, Dispatcher::PRIORITY_DEFAULT);
-        $dispatcher->bind('delete', function($event) {
-           $event->setArgument('var', 2);
-        }, Dispatcher::PRIORITY_HIGH);
-        $dispatcher->bind('delete', function($event) {
-            $this->assertEquals(1, $event->getArgument('var'));
-        }, Dispatcher::PRIORITY_LOW);
-        $dispatcher->dispatch('delete');
-    }
-    
-    function testUnbind()
-    {
-        //解绑
-        $dispatcher = $this->getDispatcher();
-        $callback = function(EventInterface $event) {
-            throw new \Exception('Propagation Stop');
-        };
-        $dispatcher->bind('delete', $callback);
-        $this->setExpectedException('\\Exception');
-        $dispatcher->dispatch('delete');
-        $dispatcher->unbind('delete', $callback);
-        $dispatcher->dispatch('delete');
-    }
-    
-    function testListener()
-    {
-        $dispatcher = $this->getDispatcher();
-        $delListener = new DelListener();
-        $this->setExpectedException('\\Exception');
-        $dispatcher->addListener('delete', $delListener);
-        $dispatcher->dispatch('delete');
-    }
-    
-    function tes2tDelayEvent()
-    {
-        $dispatcher = new Dispatcher();
-        $dispatcher->attach('del', function (AbstractEvent $event)
-        {
-            $litener = new DelLitener();
-            $event->getDispatcher()->attach('del', $litener);
-        });
-        $dispatcher->dispatch('del');
+        return true;
     }
 }

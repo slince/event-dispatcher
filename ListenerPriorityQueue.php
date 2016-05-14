@@ -12,42 +12,42 @@ class ListenerPriorityQueue implements \IteratorAggregate
      *
      * @var \SplObjectStorage
      */
-    private $_storage;
+    private $storage;
 
     /**
      *
      * @var \SplPriorityQueue
      */
-    private $_queue;
+    private $queue;
 
     function __construct()
     {
-        $this->_storage = new \SplObjectStorage();
-        $this->_queue = new \SplPriorityQueue();
+        $this->storage = new \SplObjectStorage();
+        $this->queue = new \SplPriorityQueue();
     }
 
     /**
      * 插入监听者
      *
-     * @param ListenerInterface $listener            
-     * @param int $priority            
+     * @param ListenerInterface $listener
+     * @param int $priority
      */
     function insert(ListenerInterface $listener, $priority)
     {
-        $this->_storage->attach($listener, $priority);
-        $this->_queue->insert($listener, $priority);
+        $this->storage->attach($listener, $priority);
+        $this->queue->insert($listener, $priority);
     }
 
     /**
      * 移除监听
      *
-     * @param ListenerInterface $listener            
+     * @param ListenerInterface $listener
      */
     function detach(ListenerInterface $listener)
     {
-        if ($this->_storage->contains($listener)) {
-            $this->_storage->detach($listener);
-            $this->_refreshQueue();
+        if ($this->storage->contains($listener)) {
+            $this->storage->detach($listener);
+            $this->refreshQueue();
         }
     }
 
@@ -56,30 +56,30 @@ class ListenerPriorityQueue implements \IteratorAggregate
      */
     function flush()
     {
-        $this->_storage = new \SplObjectStorage();
-        $this->_queue = new \SplPriorityQueue();
+        $this->storage = new \SplObjectStorage();
+        $this->queue = new \SplPriorityQueue();
     }
 
     /**
      * 是否存在某个监听
      *
-     * @param ListenerInterface $listener            
+     * @param ListenerInterface $listener
      * @return boolean
      */
     function contains(ListenerInterface $listener)
     {
-        return $this->_storage->contains($listener);
+        return $this->storage->contains($listener);
     }
 
     /**
      * 刷新监听者队列
      */
-    protected function _refreshQueue()
+    protected function refreshQueue()
     {
-        $this->_queue = new \SplPriorityQueue();
-        foreach ($this->_storage as $litener) {
-            $priority = $this->_storage->getInfo();
-            $this->_queue->insert($value, $priority);
+        $this->queue = new \SplPriorityQueue();
+        foreach ($this->storage as $listener) {
+            $priority = $this->storage->getInfo();
+            $this->queue->insert($listener, $priority);
         }
     }
 
@@ -90,18 +90,18 @@ class ListenerPriorityQueue implements \IteratorAggregate
      */
     function getIterator()
     {
-        return $this->_queue;
+        return $this->queue;
     }
 
     /**
      * 返回所有监听者
-     * 
+     *
      * @return array
      */
     function getAll()
     {
         $listeners = [];
-        foreach ($this->_queue as $listener) {
+        foreach ($this->queue as $listener) {
             $listeners[] = $listener;
         }
         return $listeners;
