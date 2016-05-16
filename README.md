@@ -14,7 +14,7 @@
 ```
 {
     "require": {
-        "slince/event": "*@dev"
+        "slince/event": "*"
     }
 }
 
