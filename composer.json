@@ -1,23 +1,23 @@
 {
-  "name": "slince/event",
-  "description": "Slince event dispatcher component",
-  "authors": [
-    {
-      "name": "Tao",
-      "email": "taosikai@yeah.net"
-    }
-  ],
-  "license": "Apache-2.0",
-  "require": {
-    "php": ">=5.5.9"
-  },
-  "require-dev": {
-    "phpunit/phpunit": ">=4.6"
-  },
-  "autoload": {
-    "psr-4": {
-      "Slince\\Event\\": ""
-    }
-  },
-  "minimum-stability": "dev"
+    "name": "slince/event",
+    "description": "Slince event dispatcher component",
+    "authors": [
+        {
+          "name": "Tao",
+          "email": "taosikai@yeah.net"
+        }
+    ],
+    "license": "Apache-2.0",
+    "require": {
+        "php": ">=5.5.9"
+    },
+    "require-dev": {
+        "phpunit/phpunit": ">=4.6"
+    },
+    "autoload": {
+        "psr-4": {
+          "Slince\\Event\\": ""
+        }
+    },
+    "minimum-stability": "stable"
 }
