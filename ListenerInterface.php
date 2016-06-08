@@ -7,10 +7,8 @@ namespace Slince\Event;
 
 interface ListenerInterface
 {
-
     /**
      * 响应事件
-     *
      * @param Event $event
      */
     function handle(Event $event);

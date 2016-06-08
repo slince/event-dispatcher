@@ -7,15 +7,12 @@ namespace Slince\Event;
 
 class ListenerPriorityQueue implements \IteratorAggregate
 {
-
     /**
-     *
      * @var \SplObjectStorage
      */
     public $storage;
 
     /**
-     *
      * @var \SplPriorityQueue
      */
     private $queue;
@@ -28,7 +25,6 @@ class ListenerPriorityQueue implements \IteratorAggregate
 
     /**
      * 插入监听者
-     *
      * @param ListenerInterface $listener
      * @param int $priority
      */
@@ -40,7 +36,6 @@ class ListenerPriorityQueue implements \IteratorAggregate
 
     /**
      * 移除监听
-     *
      * @param ListenerInterface $listener
      */
     function detach(ListenerInterface $listener)
@@ -62,7 +57,6 @@ class ListenerPriorityQueue implements \IteratorAggregate
 
     /**
      * 是否存在某个监听
-     *
      * @param ListenerInterface $listener
      * @return boolean
      */
@@ -86,7 +80,6 @@ class ListenerPriorityQueue implements \IteratorAggregate
 
     /**
      * 返回外部迭代器
-     *
      * @return SplPriorityQueue
      */
     function getIterator()
@@ -100,7 +93,6 @@ class ListenerPriorityQueue implements \IteratorAggregate
 
     /**
      * 返回所有监听者
-     *
      * @return array
      */
     function getAll()

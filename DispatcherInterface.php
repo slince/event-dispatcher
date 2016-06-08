@@ -7,31 +7,26 @@ namespace Slince\Event;
 
 interface DispatcherInterface
 {
-
     /**
      * 低优先级
-     *
      * @var int
      */
     const PRIORITY_LOW = -100;
 
     /**
      * 默认优先级
-     *
      * @var int
      */
     const PRIORITY_DEFAULT = 0;
 
     /**
      * 高优先级
-     *
      * @var int
      */
     const PRIORITY_HIGH = 100;
 
     /**
      * 触发事件
-     *
      * @param string $eventName
      * @param Event $event
      */
@@ -39,7 +34,6 @@ interface DispatcherInterface
 
     /**
      * 绑定回调监听
-     *
      * @param string $eventName
      * @param mixed $callable
      * @param int $priority
@@ -48,7 +42,6 @@ interface DispatcherInterface
 
     /**
      * 绑定监听器
-     *
      * @param string $eventName
      * @param ListenerInterface $listener
      * @param int $priority
@@ -57,14 +50,12 @@ interface DispatcherInterface
 
     /**
      * 绑定订阅者
-     *
      * @param SubscriberInterface $subscriber
      */
     function addSubscriber(SubscriberInterface $subscriber);
 
     /**
      * 解绑回调监听
-     *
      * @param string $eventName
      * @param mixed $callable
      */
@@ -72,7 +63,6 @@ interface DispatcherInterface
 
     /**
      * 解绑监听器
-     *
      * @param string $eventName
      * @param ListenerInterface $listener
      */
@@ -80,7 +70,6 @@ interface DispatcherInterface
 
     /**
      * 解绑订阅者
-     *
      * @param SubscriberInterface $subscriber
      */
     function removeSubscriber(SubscriberInterface $listener);
@@ -92,15 +81,14 @@ interface DispatcherInterface
 
     /**
      * 判断是否存在监听者
-     *
      * @param string $eventName
      * @param mixed $listener
+     * @return boolean
      */
     function hasListener($eventName, $listener);
 
     /**
      * 获取监听者
-     *
      * @param string $eventName
      * @return array
      */

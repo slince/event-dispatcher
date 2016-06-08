@@ -7,17 +7,14 @@ namespace Slince\Event;
 
 class CallbackListener implements ListenerInterface
 {
-
     /**
      * 回调
-     *
      * @var mixed
      */
     protected $callable;
 
     /**
      * 实例集合
-     *
      * @var array
      */
     protected static $listeners = [];
@@ -29,7 +26,6 @@ class CallbackListener implements ListenerInterface
 
     /**
      * 从闭包创建当前类实例
-     *
      * @param mixed $callable
      * @return CallbackListener
      */
@@ -42,7 +38,6 @@ class CallbackListener implements ListenerInterface
 
     /**
      * 查看callable对应的CallbackListener实例
-     *
      * @param mixed $callable
      * @return CallbackListener|NULL
      */
@@ -65,9 +60,8 @@ class CallbackListener implements ListenerInterface
     }
 
     /**
-     * 获取calleable
-     *
-     * @return \Slince\Event\mixed
+     * 获取callable
+     * @return callable
      */
     function getCallable()
     {
@@ -76,7 +70,6 @@ class CallbackListener implements ListenerInterface
 
     /**
      * 响应事件
-     *
      * @param Event $event
      */
     function handle(Event $event)

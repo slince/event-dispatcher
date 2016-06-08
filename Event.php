@@ -9,21 +9,18 @@ class Event
 {
     /**
      * 事件名
-     *
      * @var string
      */
     protected $name;
 
     /**
      * 主题
-     *
      * @var object
      */
     protected $subject;
 
     /**
      * 额外参数
-     *
      * @var array
      */
     protected $arguments = [];
@@ -83,7 +80,6 @@ class Event
 
     /**
      * 设置参数
-     *
      * @param string $name
      * @param mixed $value
      */
@@ -94,7 +90,6 @@ class Event
 
     /**
      * 获取参数
-     *
      * @param string $name
      * @return mixed
      */
@@ -105,7 +100,6 @@ class Event
 
     /**
      * 批量设置参数
-     *
      * @param array $arguments
      */
     function setArguments(array $arguments)
@@ -115,7 +109,6 @@ class Event
 
     /**
      * 批量获取参数
-     *
      * @return array
      */
     function getArguments()

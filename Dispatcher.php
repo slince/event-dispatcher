@@ -7,18 +7,16 @@ namespace Slince\Event;
 
 class Dispatcher implements DispatcherInterface
 {
-
     /**
      * 监听者
-     *
      * @var array
      */
     protected $listeners = [];
 
     /**
-     * (non-PHPdoc)
-     *
-     * @see \Slince\Event\DispatcherInterface::dispatch()
+     * 触发事件
+     * @param string $eventName
+     * @param Event $event
      */
     function dispatch($eventName, Event $event = null)
     {
@@ -36,9 +34,10 @@ class Dispatcher implements DispatcherInterface
     }
 
     /**
-     * (non-PHPdoc)
-     *
-     * @see \Slince\Event\DispatcherInterface::bind()
+     * 绑定回调监听
+     * @param string $eventName
+     * @param mixed $callable
+     * @param int $priority
      */
     function bind($eventName, $callable, $priority = self::PRIORITY_DEFAULT)
     {
@@ -50,9 +49,10 @@ class Dispatcher implements DispatcherInterface
     }
 
     /**
-     * (non-PHPdoc)
-     *
-     * @see \Slince\Event\DispatcherInterface::addListener()
+     * 绑定监听器
+     * @param string $eventName
+     * @param ListenerInterface $listener
+     * @param int $priority
      */
     function addListener($eventName, ListenerInterface $listener, $priority = self::PRIORITY_DEFAULT)
     {
@@ -63,9 +63,8 @@ class Dispatcher implements DispatcherInterface
     }
 
     /**
-     * (non-PHPdoc)
-     *
-     * @see \Slince\Event\DispatcherInterface::addSubscriber()
+     * 绑定订阅者
+     * @param SubscriberInterface $subscriber
      */
     function addSubscriber(SubscriberInterface $subscriber)
     {
@@ -75,9 +74,9 @@ class Dispatcher implements DispatcherInterface
     }
 
     /**
-     * (non-PHPdoc)
-     *
-     * @see \Slince\Event\DispatcherInterface::unbind()
+     * 解绑回调监听
+     * @param string $eventName
+     * @param mixed $callable
      */
     function unbind($eventName, $callable)
     {
@@ -88,9 +87,9 @@ class Dispatcher implements DispatcherInterface
     }
 
     /**
-     * (non-PHPdoc)
-     *
-     * @see \Slince\Event\DispatcherInterface::removeListener()
+     * 解绑监听器
+     * @param string $eventName
+     * @param ListenerInterface $listener
      */
     function removeListener($eventName, ListenerInterface $listener)
     {
@@ -101,9 +100,8 @@ class Dispatcher implements DispatcherInterface
     }
 
     /**
-     * (non-PHPdoc)
-     *
-     * @see \Slince\Event\DispatcherInterface::removeSubscriber()
+     * 解绑订阅者
+     * @param SubscriberInterface $subscriber
      */
     function removeSubscriber(SubscriberInterface $subscriber)
     {
@@ -113,9 +111,7 @@ class Dispatcher implements DispatcherInterface
     }
 
     /**
-     * (non-PHPdoc)
-     *
-     * @see \Slince\Event\DispatcherInterface::removeAll()
+     * 解绑所有监听者
      */
     function removeAll($eventName = null)
     {
@@ -131,9 +127,10 @@ class Dispatcher implements DispatcherInterface
     }
 
     /**
-     * (non-PHPdoc)
-     *
-     * @see \Slince\Event\DispatcherInterface::hasListener()
+     * 判断是否存在监听者
+     * @param string $eventName
+     * @param mixed $listener
+     * @return boolean
      */
     function hasListener($eventName, $listener)
     {
@@ -147,9 +144,9 @@ class Dispatcher implements DispatcherInterface
     }
 
     /**
-     * (non-PHPdoc)
-     *
-     * @see \Slince\Event\DispatcherInterface::getListeners()
+     * 获取监听者
+     * @param string $eventName
+     * @return array
      */
     function getListeners($eventName = null)
     {
