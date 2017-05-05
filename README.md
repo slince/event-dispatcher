@@ -25,7 +25,9 @@ There are two types of listeners: `callable` and `Slince\Event\Listener`
 - `Slince\Event\Listener` 
 
 ```
-class FooListener extends ListenerInterface
+use Slince\Event\ListenerInterface;
+
+class FooListener implements ListenerInterface
 {
      public function handle(Event $event)
      {
@@ -49,7 +51,7 @@ $dispatcher->addListener('foo-event-name', function(Event $event){
 ```
 use Slince\Event\SubscriberInterface;
 
-class FooSubscriber extends SubscriberInterface
+class FooSubscriber implements SubscriberInterface
 {
      public function getEvents(Event $event)
      {
