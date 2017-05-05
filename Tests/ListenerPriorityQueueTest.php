@@ -13,12 +13,12 @@ class ListenerPriorityQueueTest extends \PHPUnit_Framework_TestCase
      */
     protected $queue;
 
-    function setUp()
+    public function setUp()
     {
         $this->queue = new ListenerPriorityQueue();
     }
 
-    function testInsert()
+    public function testInsert()
     {
         $listener = new Listener2();
         $this->assertFalse($this->queue->contains($listener));
@@ -28,7 +28,7 @@ class ListenerPriorityQueueTest extends \PHPUnit_Framework_TestCase
         $this->queue->insert($listener, Dispatcher::PRIORITY_HIGH);
     }
 
-    function testFlush()
+    public function testFlush()
     {
         $listener = new Listener2();
         $this->queue->insert($listener, Dispatcher::PRIORITY_DEFAULT);
@@ -40,7 +40,7 @@ class ListenerPriorityQueueTest extends \PHPUnit_Framework_TestCase
 
 class Listener2 implements ListenerInterface
 {
-    function handle(Event $event)
+    public function handle(Event $event)
     {
         return true;
     }

@@ -8,31 +8,30 @@ namespace Slince\Event;
 class Event
 {
     /**
-     * 事件名
+     * The event name
      * @var string
      */
     protected $name;
 
     /**
-     * 主题
+     * The subject
      * @var object
      */
     protected $subject;
 
     /**
-     * 额外参数
+     * Array of arguments
      * @var array
      */
     protected $arguments = [];
 
     /**
-     * 是否阻止冒泡
-     *
+     * Whether the propagation is stopped
      * @var boolean
      */
     protected $propagationStopped = false;
 
-    function __construct($name, $subject = null, array $arguments = [])
+    public function __construct($name, $subject = null, array $arguments = [])
     {
         $this->name = $name;
         $this->subject = $subject;
@@ -41,96 +40,96 @@ class Event
 
 
     /**
-     * 获取事件名
+     * Gets the  event name
      * @return string
      */
-    function getName()
+    public function getName()
     {
         return $this->name;
     }
 
     /**
-     * 设置事件名
+     * Sets the event name
      * @param $name
      */
-    function setName($name)
+    public function setName($name)
     {
         $this->name = $name;
     }
 
 
     /**
-     * 设置subject
+     * Sets the subject
      * @param $subject
      */
-    function setSubject($subject)
+    public function setSubject($subject)
     {
         $this->subject = $subject;
     }
 
 
     /**
-     * 获取subject
+     * Gets the subject
      * @return null|object
      */
-    function getSubject()
+    public function getSubject()
     {
         return $this->subject;
     }
 
     /**
-     * 设置参数
+     * Sets a argument to the event
      * @param string $name
      * @param mixed $value
      */
-    function setArgument($name, $value)
+    public function setArgument($name, $value)
     {
         $this->arguments[$name] = $value;
     }
 
     /**
-     * 获取参数
+     * Gets a argument by its key
      * @param string $name
      * @return mixed
      */
-    function getArgument($name)
+    public function getArgument($name)
     {
         return isset($this->arguments[$name]) ? $this->arguments[$name] : null;
     }
 
     /**
-     * 批量设置参数
+     * Sets many arguments
      * @param array $arguments
      */
-    function setArguments(array $arguments)
+    public function setArguments(array $arguments)
     {
         $this->arguments = $arguments;
     }
 
     /**
-     * 批量获取参数
+     * Gets all arguments
      * @return array
      */
-    function getArguments()
+    public function getArguments()
     {
         return $this->arguments;
     }
 
     /**
-     * 阻止事件冒泡
+     * Stop event propagation
      * @return $this
      */
-    function stopPropagation()
+    public function stopPropagation()
     {
         $this->propagationStopped = true;
         return $this;
     }
 
     /**
-     * 是否阻止事件冒泡
+     * Checks whether propagation was stopped.
      * @return bool
      */
-    function isPropagationStopped()
+    public function isPropagationStopped()
     {
         return $this->propagationStopped;
     }

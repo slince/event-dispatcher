@@ -14,13 +14,13 @@ class EventTest extends \PHPUnit_Framework_TestCase
         return new Event($name);
     }
 
-    function testGetName()
+    public function testGetName()
     {
         $event = $this->createEvent(self::EVENT_FOOL1);
         $this->assertEquals(self::EVENT_FOOL1, $event->getName());
     }
 
-    function testSetName()
+    public function testSetName()
     {
         $event = $this->createEvent(self::EVENT_FOOL1);
         $this->assertEquals(self::EVENT_FOOL1, $event->getName());
@@ -28,7 +28,7 @@ class EventTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(self::EVENT_FOOL2, $event->getName());
     }
 
-    function testArguments()
+    public function testArguments()
     {
         $event = $this->createEvent(self::EVENT_FOOL1);
         $this->assertCount(0, $event->getArguments());
@@ -37,7 +37,7 @@ class EventTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('value', $event->getArgument('parameter'));
     }
 
-    function testStopPropagation()
+    public function testStopPropagation()
     {
         $event = $this->createEvent(self::EVENT_FOOL1);
         $this->assertFalse($event->isPropagationStopped());

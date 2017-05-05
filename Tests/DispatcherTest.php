@@ -28,7 +28,7 @@ class DispatcherTest extends \PHPUnit_Framework_TestCase
 
     protected $subscriber;
 
-    function setUp()
+    public function setUp()
     {
         $this->dispatcher = new Dispatcher();
         $this->callback = function () {
@@ -36,12 +36,12 @@ class DispatcherTest extends \PHPUnit_Framework_TestCase
         };
     }
 
-    function testInitialize()
+    public function testInitialize()
     {
         $this->assertEmpty($this->dispatcher->getListeners());
     }
 
-    function testBind()
+    public function testBind()
     {
         $this->assertEmpty($this->dispatcher->getListeners(self::EVENT_FOOL1));
         $this->dispatcher->bind(self::EVENT_FOOL1, function () {
@@ -50,14 +50,14 @@ class DispatcherTest extends \PHPUnit_Framework_TestCase
         $this->assertCount(1, $this->dispatcher->getListeners(self::EVENT_FOOL1));
     }
 
-    function testAddListener()
+    public function testAddListener()
     {
         $this->assertEmpty($this->dispatcher->getListeners(self::EVENT_FOOL2));
         $this->dispatcher->addListener(self::EVENT_FOOL2, new Listener());
         $this->assertCount(1, $this->dispatcher->getListeners(self::EVENT_FOOL2));
     }
 
-    function testAddSubscriber()
+    public function testAddSubscriber()
     {
         $this->dispatcher->removeAll();
         $this->assertCount(0, $this->dispatcher->getListeners(self::EVENT_FOOL1));
@@ -67,7 +67,7 @@ class DispatcherTest extends \PHPUnit_Framework_TestCase
         $this->assertCount(1, $this->dispatcher->getListeners(self::EVENT_FOOL2));
     }
 
-    function testUnBind()
+    public function testUnBind()
     {
         $this->dispatcher->removeAll();
         $this->assertCount(0, $this->dispatcher->getListeners(self::EVENT_FOOL1));
@@ -80,7 +80,7 @@ class DispatcherTest extends \PHPUnit_Framework_TestCase
         $this->assertCount(0, $this->dispatcher->getListeners(self::EVENT_FOOL1));
     }
 
-    function testRemoveListener()
+    public function testRemoveListener()
     {
         $this->dispatcher->removeAll();
         $listener = new Listener();
@@ -90,7 +90,7 @@ class DispatcherTest extends \PHPUnit_Framework_TestCase
         $this->assertCount(0, $this->dispatcher->getListeners(self::EVENT_FOOL2));
     }
 
-    function testRemoveScriber()
+    public function testRemoveScriber()
     {
         $this->dispatcher->removeAll();
         CallbackListener::clearListeners();
@@ -103,7 +103,7 @@ class DispatcherTest extends \PHPUnit_Framework_TestCase
         $this->assertCount(0, $this->dispatcher->getListeners(self::EVENT_FOOL2));
     }
 
-    function testRemoveAll()
+    public function testRemoveAll()
     {
         $this->dispatcher->removeAll();
         $this->dispatcher->addSubscriber(new Subscriber());
@@ -112,7 +112,7 @@ class DispatcherTest extends \PHPUnit_Framework_TestCase
         $this->assertNotEmpty($this->dispatcher->getListeners(self::EVENT_FOOL2));
     }
 
-    function testSimpleDispatch()
+    public function testSimpleDispatch()
     {
         $this->dispatcher->removeAll();
         $this->counter = 0;
@@ -126,7 +126,7 @@ class DispatcherTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(2, $this->counter);
     }
 
-    function testDispatchWithEvent()
+    public function testDispatchWithEvent()
     {
         $this->dispatcher->removeAll();
         $this->dispatcher->bind(self::EVENT_FOOL3, function (Event $event) {
@@ -140,7 +140,7 @@ class DispatcherTest extends \PHPUnit_Framework_TestCase
         ]));
     }
 
-    function testDispatcherWithPriority()
+    public function testDispatcherWithPriority()
     {
         $this->dispatcher->removeAll();
         $this->dispatcher->bind(self::EVENT_FOOL3, function (Event $event) {
@@ -162,7 +162,7 @@ class DispatcherTest extends \PHPUnit_Framework_TestCase
         ]));
     }
 
-    function testDispatchStopPropagation()
+    public function testDispatchStopPropagation()
     {
         $this->dispatcher->removeAll();
         $this->dispatcher->bind(self::EVENT_FOOL3, function (Event $event) {
@@ -184,7 +184,7 @@ class DispatcherTest extends \PHPUnit_Framework_TestCase
 class Listener implements ListenerInterface
 {
 
-    function handle(Event $event)
+    public function handle(Event $event)
     {
         throw new \Exception('Propagation Stop');
     }
@@ -192,7 +192,7 @@ class Listener implements ListenerInterface
 
 class Subscriber implements SubscriberInterface
 {
-    function getEvents()
+    public function getEvents()
     {
         return [
             DispatcherTest::EVENT_FOOL1 => 'onFool1',
@@ -200,12 +200,12 @@ class Subscriber implements SubscriberInterface
         ];
     }
 
-    function onFool1()
+    public function onFool1()
     {
         return true;
     }
 
-    function onFool2()
+    public function onFool2()
     {
         return true;
     }

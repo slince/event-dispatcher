@@ -9,7 +9,8 @@ interface SubscriberInterface
 {
 
     /**
-     * 获取所有注册事件
+     * Returns an array of event names this subscriber wants to listen to.
+     * @return array
      */
-    function getEvents();
+    public function getEvents();
 }

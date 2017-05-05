@@ -5,26 +5,28 @@
  */
 namespace Slince\Event;
 
+use Slince\Event\Exception\InvalidArgumentException;
+
 class Dispatcher implements DispatcherInterface
 {
     /**
-     * 监听者
-     * @var array
+     * Array of listeners
+     * @var ListenerPriorityQueue[]
      */
     protected $listeners = [];
 
     /**
-     * 触发事件
-     * @param string $eventName
-     * @param Event $event
+     * {@inheritdoc}
      */
-    function dispatch($eventName, Event $event = null)
+    public function dispatch($eventName, Event $event = null)
     {
-        if (is_null($event)) {
+        if ($eventName instanceof Event) {
+            $event = $eventName;
+        } elseif (is_string($eventName) && is_null($event)) {
             $event = new Event($eventName, null);
         }
-        if (!empty($this->listeners[$eventName])) {
-            foreach ($this->listeners[$eventName] as $listener) {
+        if (!empty($this->listeners[$event->getName()])) {
+            foreach ($this->listeners[$event->getName()] as $listener) {
                 if ($event->isPropagationStopped()) {
                     break;
                 }
@@ -34,128 +36,112 @@ class Dispatcher implements DispatcherInterface
     }
 
     /**
-     * 绑定回调监听
-     * @param string $eventName
-     * @param mixed $callable
-     * @param int $priority
+     * {@inheritdoc}
      */
-    function bind($eventName, $callable, $priority = self::PRIORITY_DEFAULT)
+    public function bind($eventName, $callable, $priority = self::PRIORITY_DEFAULT)
     {
-        if (!is_callable($callable)) {
-            return;
-        }
-        $listener = CallbackListener::createFromCallable($callable);
-        return $this->addListener($eventName, $listener, $priority);
+        $this->addListener($eventName, $callable, $priority);
     }
 
     /**
-     * 绑定监听器
-     * @param string $eventName
-     * @param ListenerInterface $listener
-     * @param int $priority
+     * {@inheritdoc}
      */
-    function addListener($eventName, ListenerInterface $listener, $priority = self::PRIORITY_DEFAULT)
+    public function addListener($eventName, $listener, $priority = self::PRIORITY_DEFAULT)
     {
-        if (empty($this->listeners[$eventName])) {
+        if (!isset($this->listeners[$eventName])) {
             $this->listeners[$eventName] = new ListenerPriorityQueue();
+        }
+        if (is_callable($listener)) {
+            $listener = CallableListener::createFromCallable($listener);
+        }
+        if (!$listener instanceof ListenerInterface) {
+            throw new InvalidArgumentException('The listener should be the implementation of the listenerInterface or callable');
         }
         $this->listeners[$eventName]->insert($listener, $priority);
     }
 
     /**
-     * 绑定订阅者
-     * @param SubscriberInterface $subscriber
+     * {@inheritdoc}
      */
-    function addSubscriber(SubscriberInterface $subscriber)
+    public function addSubscriber(SubscriberInterface $subscriber)
     {
-        foreach ($subscriber->getEvents() as $eventName => $method) {
-            $this->bind($eventName, [$subscriber, $method]);
+        foreach ($subscriber->getEvents() as $eventName => $action) {
+            $this->bind($eventName, [$subscriber, $action]);
         }
     }
 
     /**
-     * 解绑回调监听
-     * @param string $eventName
-     * @param mixed $callable
+     * {@inheritdoc}
      */
-    function unbind($eventName, $callable)
+    public function unbind($eventName, $callable)
     {
-        $listener = CallbackListener::getFromCallable($callable);
-        if (!is_null($listener)) {
-            $this->removeListener($eventName, $listener);
-        }
+        $this->removeListener($eventName, $callable);
     }
 
     /**
-     * 解绑监听器
-     * @param string $eventName
-     * @param ListenerInterface $listener
+     * {@inheritdoc}
      */
-    function removeListener($eventName, ListenerInterface $listener)
+    public function removeListener($eventName, $listener)
     {
         if (empty($this->listeners[$eventName])) {
-            return false;
+            return;
+        }
+        if (is_callable($listener) && ($listener = CallableListener::findByCallable($listener)) === false) {
+            return;
         }
         $this->listeners[$eventName]->detach($listener);
     }
 
     /**
-     * 解绑订阅者
-     * @param SubscriberInterface $subscriber
+     * {@inheritdoc}
      */
-    function removeSubscriber(SubscriberInterface $subscriber)
+    public function removeSubscriber(SubscriberInterface $subscriber)
     {
-        foreach ($subscriber->getEvents() as $eventName => $method) {
-            $this->unbind($eventName, [$subscriber, $method]);
+        foreach ($subscriber->getEvents() as $eventName => $action) {
+            $this->removeListener($eventName, [$subscriber, $action]);
         }
     }
 
     /**
-     * 解绑所有监听者
+     * {@inheritdoc}
      */
-    function removeAll($eventName = null)
+    public function removeAll($eventName = null)
     {
-        if (!is_null($eventName)) {
-            if (!empty($this->listeners[$eventName])) {
-                $this->listeners[$eventName]->flush();
-            }
+        if (!is_null($eventName) && isset($this->listeners[$eventName])) {
+            $this->listeners[$eventName]->clear();
         } else {
             foreach ($this->listeners as $queue) {
-                $queue->flush();
+                $queue->clear();
             }
         }
     }
 
     /**
-     * 判断是否存在监听者
-     * @param string $eventName
-     * @param mixed $listener
-     * @return boolean
+     * {@inheritdoc}
      */
-    function hasListener($eventName, $listener)
+    public function hasListener($eventName, $listener)
     {
-        if (empty($this->listeners[$eventName])) {
+        if (!isset($this->listeners[$eventName])) {
             return false;
         }
         if (is_callable($listener)) {
-            $listener = CallbackListener::newFromCallable($listener);
+            $listener = CallableListener::findByCallable($listener);
         }
         return $this->listeners[$eventName]->contains($listener);
     }
 
     /**
-     * 获取监听者
-     * @param string $eventName
-     * @return array
+     * {@inheritdoc}
      */
-    function getListeners($eventName = null)
+    public function getListeners($eventName = null)
     {
         if (!is_null($eventName)) {
-            return empty($this->listeners[$eventName]) ? [] : $this->listeners[$eventName]->getAll();
+            return isset($this->listeners[$eventName]) ?
+                $this->listeners[$eventName]->all() : [];
         } else {
             $listeners = [];
             foreach ($this->listeners as $queue) {
-                $listeners += $queue->getAll();
+                $listeners += $queue->all();
             }
             return $listeners;
         }

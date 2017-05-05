@@ -1,6 +1,6 @@
 <?php
 /**
- * slince event dispatcher component
+ * slince event dispatcher library
  * @author Tao <taosikai@yeah.net>
  */
 namespace Slince\Event;
@@ -8,89 +8,92 @@ namespace Slince\Event;
 interface DispatcherInterface
 {
     /**
-     * 低优先级
+     * Low priority
      * @var int
      */
     const PRIORITY_LOW = -100;
 
     /**
-     * 默认优先级
+     * Default priority
      * @var int
      */
     const PRIORITY_DEFAULT = 0;
 
     /**
-     * 高优先级
+     * High priority
      * @var int
      */
     const PRIORITY_HIGH = 100;
 
     /**
-     * 触发事件
+     * Dispatches an event to all registered listeners.
      * @param string $eventName
      * @param Event $event
      */
-    function dispatch($eventName, Event $event = null);
+    public function dispatch($eventName, Event $event = null);
 
     /**
-     * 绑定回调监听
+     * Registries a callable-listener for the event
      * @param string $eventName
      * @param mixed $callable
      * @param int $priority
+     * @deprecated Use addListener instead
      */
-    function bind($eventName, $callable, $priority = self::PRIORITY_DEFAULT);
+    public function bind($eventName, $callable, $priority = self::PRIORITY_DEFAULT);
 
     /**
-     * 绑定监听器
+     * Registries a listener for the event
      * @param string $eventName
-     * @param ListenerInterface $listener
+     * @param ListenerInterface|callable $listener
      * @param int $priority
      */
-    function addListener($eventName, ListenerInterface $listener, $priority = self::PRIORITY_DEFAULT);
+    public function addListener($eventName, $listener, $priority = self::PRIORITY_DEFAULT);
 
     /**
-     * 绑定订阅者
+     * Registries a subscriber
      * @param SubscriberInterface $subscriber
      */
-    function addSubscriber(SubscriberInterface $subscriber);
+    public function addSubscriber(SubscriberInterface $subscriber);
 
     /**
-     * 解绑回调监听
+     * Removes a callable-listener from the specified event
      * @param string $eventName
      * @param mixed $callable
+     * @deprecated Use removeListener instead
      */
-    function unbind($eventName, $callable);
+    public function unbind($eventName, $callable);
 
     /**
-     * 解绑监听器
+     * Removes a listener from the specified event
      * @param string $eventName
-     * @param ListenerInterface $listener
+     * @param ListenerInterface|callable $listener
      */
-    function removeListener($eventName, ListenerInterface $listener);
+    public function removeListener($eventName, $listener);
 
     /**
-     * 解绑订阅者
+     * Removes a subscriber
      * @param SubscriberInterface $subscriber
      */
-    function removeSubscriber(SubscriberInterface $listener);
+    public function removeSubscriber(SubscriberInterface $subscriber);
 
     /**
-     * 解绑所有监听者
+     * Removes all listeners from the specified event
+     * @param string $eventName
      */
-    function removeAll($eventName = null);
+    public function removeAll($eventName = null);
 
     /**
-     * 判断是否存在监听者
+     * Checks whether the listener is existed for the event
      * @param string $eventName
      * @param mixed $listener
      * @return boolean
      */
-    function hasListener($eventName, $listener);
+    public function hasListener($eventName, $listener);
 
     /**
-     * 获取监听者
+     * Gets all listeners of the event or all registered listeners
      * @param string $eventName
      * @return array
      */
-    function getListeners($eventName = null);
+    public function getListeners($eventName = null);
 }

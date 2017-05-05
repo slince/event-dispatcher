@@ -1,10 +1,9 @@
 # Event Dispatcher Component
 
-[![Build Status](https://travis-ci.org/slince/event.svg?branch=master)](https://travis-ci.org/slince/event)
-[![Latest Stable Version](https://poser.pugx.org/slince/event/v/stable)](https://packagist.org/packages/slince/event)
-[![Total Downloads](https://poser.pugx.org/slince/event/downloads)](https://packagist.org/packages/slince/event)
-[![Latest Unstable Version](https://poser.pugx.org/slince/event/v/unstable)](https://packagist.org/packages/slince/event)
-[![License](https://poser.pugx.org/slince/event/license)](https://packagist.org/packages/slince/event)
+[![Build Status](https://img.shields.io/travis/slince/event/master.svg?style=flat-square)](https://travis-ci.org/slince/event)
+[![Coverage Status](https://img.shields.io/codecov/c/github/slince/event.svg?style=flat-square)](https://codecov.io/github/slince/event)
+[![Latest Stable Version](https://img.shields.io/packagist/v/slince/event.svg?style=flat-square&label=stable)](https://packagist.org/packages/slince/event)
+[![Scrutinizer](https://img.shields.io/scrutinizer/g/slince/event.svg?style=flat-square)](https://scrutinizer-ci.com/g/slince/event/?branch=master)
 
 事件调度组件。
 
@@ -38,11 +37,11 @@ $dispatcher->dispatch('User.loginSuccess');
 Class User
 {
     private $dispatcher;
-    function __construct(Dispatcher $dispatcher)
+    public function __construct(Dispatcher $dispatcher)
     {
         $this->dispatcher = $dispatcher;
     }
-    function login()
+    public function login()
     {
         //如果登录成功，触发事件
         if (true) {
