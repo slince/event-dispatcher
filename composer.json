@@ -1,7 +1,7 @@
 {
     "name": "slince/event",
     "description": "The event dispatcher",
-    "keywords":  ["event", "event dispatcher", "emitter", "listener", "subscriber", "observer pattern"],
+    "keywords": ["event", "event dispatcher", "emitter", "listener", "subscriber", "observer pattern"],
     "authors": [
         {
           "name": "Tao",
