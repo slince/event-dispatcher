@@ -1,2 +1,13 @@
 <?php
-class_alias('Slince\Event\CallableListener', 'Slince\Event\CallbackListener2');
+/**
+ * slince event dispatcher library
+ * @author Tao <taosikai@yeah.net>
+ */
+namespace Slince\Event;
+
+/**
+ * @deprecated
+ */
+class CallbackListener extends CallableListener
+{
+}

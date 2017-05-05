@@ -66,7 +66,7 @@ class Dispatcher implements DispatcherInterface
     public function addSubscriber(SubscriberInterface $subscriber)
     {
         foreach ($subscriber->getEvents() as $eventName => $action) {
-            $this->bind($eventName, [$subscriber, $action]);
+            $this->addListener($eventName, [$subscriber, $action]);
         }
     }
 
@@ -141,7 +141,7 @@ class Dispatcher implements DispatcherInterface
         } else {
             $listeners = [];
             foreach ($this->listeners as $queue) {
-                $listeners += $queue->all();
+                $listeners = array_merge($listeners, $queue->all());
             }
             return $listeners;
         }

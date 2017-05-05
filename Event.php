@@ -67,7 +67,6 @@ class Event
         $this->subject = $subject;
     }
 
-
     /**
      * Gets the subject
      * @return null|object

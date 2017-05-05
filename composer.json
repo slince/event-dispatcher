@@ -1,6 +1,7 @@
 {
     "name": "slince/event",
-    "description": "Slince event dispatcher component",
+    "description": "The event dispatcher",
+    "keywords":  ["event", "event dispatcher", "emitter", "listener", "subscriber", "observer pattern"],
     "authors": [
         {
           "name": "Tao",

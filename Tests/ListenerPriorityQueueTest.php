@@ -2,46 +2,51 @@
 namespace Slince\Event\Tests;
 
 use Slince\Event\Dispatcher;
-use Slince\Event\ListenerInterface;
 use Slince\Event\ListenerPriorityQueue;
-use Slince\Event\Event;
+use PHPUnit\Framework\TestCase;
 
-class ListenerPriorityQueueTest extends \PHPUnit_Framework_TestCase
+class ListenerPriorityQueueTest extends TestCase
 {
-    /**
-     * @var ListenerPriorityQueue
-     */
-    protected $queue;
-
-    public function setUp()
-    {
-        $this->queue = new ListenerPriorityQueue();
-    }
-
     public function testInsert()
     {
-        $listener = new Listener2();
-        $this->assertFalse($this->queue->contains($listener));
-        $this->queue->insert($listener, Dispatcher::PRIORITY_DEFAULT);
-        $this->assertTrue($this->queue->contains($listener));
-        $this->queue->insert($listener, Dispatcher::PRIORITY_LOW);
-        $this->queue->insert($listener, Dispatcher::PRIORITY_HIGH);
+        $queue = new ListenerPriorityQueue();
+        $listener = new FooListener();
+        $this->assertFalse($queue->contains($listener));
+        $queue->insert($listener, Dispatcher::PRIORITY_DEFAULT);
+        $this->assertTrue($queue->contains($listener));
     }
 
-    public function testFlush()
+    public function testContains()
     {
-        $listener = new Listener2();
-        $this->queue->insert($listener, Dispatcher::PRIORITY_DEFAULT);
-        $this->assertTrue($this->queue->contains($listener));
-        $this->queue->flush();
-        $this->assertFalse($this->queue->contains($listener));
+        $queue = new ListenerPriorityQueue();
+        $listener = new FooListener();
+        $this->assertFalse($queue->contains($listener));
     }
-}
 
-class Listener2 implements ListenerInterface
-{
-    public function handle(Event $event)
+    public function testDetach()
     {
-        return true;
+        $queue = new ListenerPriorityQueue();
+        $listener = new FooListener();
+        $queue->insert($listener, Dispatcher::PRIORITY_DEFAULT);
+        $this->assertTrue($queue->contains($listener));
+        $queue->detach($listener);
+        $this->assertFalse($queue->contains($listener));
+    }
+
+    public function testClear()
+    {
+        $queue = new ListenerPriorityQueue();
+        $listener = new FooListener();
+        $queue->insert($listener, Dispatcher::PRIORITY_DEFAULT);
+        $queue->clear();
+        $this->assertFalse($queue->contains($listener));
+    }
+
+    public function testAll()
+    {
+        $queue = new ListenerPriorityQueue();
+        $listener = new FooListener();
+        $queue->insert($listener, Dispatcher::PRIORITY_DEFAULT);
+        $this->assertEquals([$listener], $queue->all());
     }
 }

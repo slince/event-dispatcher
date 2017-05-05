@@ -1,192 +1,144 @@
 <?php
 namespace Slince\Event\Tests;
 
-use Slince\Event\CallbackListener;
+use PHPUnit\Framework\TestCase;
+use Slince\Event\CallableListener;
 use Slince\Event\Dispatcher;
 use Slince\Event\Event;
-use Slince\Event\ListenerInterface;
 use Slince\Event\SubscriberInterface;
 
-class DispatcherTest extends \PHPUnit_Framework_TestCase
+class DispatcherTest extends TestCase
 {
-
-    const EVENT_FOOL1 = 'fool1';
-
-    const EVENT_FOOL2 = 'fool2';
-
-    const EVENT_FOOL3 = 'fool3';
-
-    /**
-     * @var Dispatcher
-     */
-    protected $dispatcher;
-
-
-    protected $callback;
-
-    protected $listener;
-
-    protected $subscriber;
-
-    public function setUp()
-    {
-        $this->dispatcher = new Dispatcher();
-        $this->callback = function () {
-            return true;
-        };
-    }
-
     public function testInitialize()
     {
-        $this->assertEmpty($this->dispatcher->getListeners());
-    }
-
-    public function testBind()
-    {
-        $this->assertEmpty($this->dispatcher->getListeners(self::EVENT_FOOL1));
-        $this->dispatcher->bind(self::EVENT_FOOL1, function () {
-            return true;
-        });
-        $this->assertCount(1, $this->dispatcher->getListeners(self::EVENT_FOOL1));
+        $dispatcher = new Dispatcher();
+        $this->assertEmpty($dispatcher->getListeners());
     }
 
     public function testAddListener()
     {
-        $this->assertEmpty($this->dispatcher->getListeners(self::EVENT_FOOL2));
-        $this->dispatcher->addListener(self::EVENT_FOOL2, new Listener());
-        $this->assertCount(1, $this->dispatcher->getListeners(self::EVENT_FOOL2));
+        $dispatcher = new Dispatcher();
+        $this->assertEmpty($dispatcher->getListeners('foo'));
+        $dispatcher->addListener('foo', new FooListener());
+        $this->assertCount(1, $dispatcher->getListeners('foo'));
     }
 
     public function testAddSubscriber()
     {
-        $this->dispatcher->removeAll();
-        $this->assertCount(0, $this->dispatcher->getListeners(self::EVENT_FOOL1));
-        $this->assertCount(0, $this->dispatcher->getListeners(self::EVENT_FOOL2));
-        $this->dispatcher->addSubscriber(new Subscriber());
-        $this->assertCount(1, $this->dispatcher->getListeners(self::EVENT_FOOL1));
-        $this->assertCount(1, $this->dispatcher->getListeners(self::EVENT_FOOL2));
+        $dispatcher = new Dispatcher();
+        $dispatcher->addSubscriber(new Subscriber());
+        $this->assertCount(1, $dispatcher->getListeners('foo'));
+        $this->assertCount(1, $dispatcher->getListeners('bar'));
     }
 
-    public function testUnBind()
+    public function tes2tRemoveListener()
     {
-        $this->dispatcher->removeAll();
-        $this->assertCount(0, $this->dispatcher->getListeners(self::EVENT_FOOL1));
+        $dispatcher = new Dispatcher();
+        $listener = new FooListener();
+        $dispatcher->addListener('bar', $listener);
+        $this->assertCount(1, $dispatcher->getListeners('bar'));
+        $dispatcher->removeListener('bar', $listener);
+        $this->assertCount(0, $dispatcher->getListeners('bar'));
+    }
+
+    public function tes2tRemoveCallableListener()
+    {
+        $dispatcher = new Dispatcher();
         $callback = function () {
-            return true;
         };
-        $this->dispatcher->bind(self::EVENT_FOOL1, $callback);
-        $this->assertCount(1, $this->dispatcher->getListeners(self::EVENT_FOOL1));
-        $this->dispatcher->unbind(self::EVENT_FOOL1, $callback);
-        $this->assertCount(0, $this->dispatcher->getListeners(self::EVENT_FOOL1));
+        $dispatcher->addListener('bar', $callback);
+        $this->assertCount(1, $dispatcher->getListeners('bar'));
+        $dispatcher->removeListener('bar', $callback);
+        $this->assertCount(0, $dispatcher->getListeners('bar'));
     }
 
-    public function testRemoveListener()
+    public function testRemoveSubscriber()
     {
-        $this->dispatcher->removeAll();
-        $listener = new Listener();
-        $this->dispatcher->addListener(self::EVENT_FOOL2, $listener);
-        $this->assertCount(1, $this->dispatcher->getListeners(self::EVENT_FOOL2));
-        $this->dispatcher->removeListener(self::EVENT_FOOL2, $listener);
-        $this->assertCount(0, $this->dispatcher->getListeners(self::EVENT_FOOL2));
-    }
-
-    public function testRemoveScriber()
-    {
-        $this->dispatcher->removeAll();
-        CallbackListener::clearListeners();
+        CallableListener::clearListeners();
+        $dispatcher = new Dispatcher();
         $subscriber = new Subscriber();
-        $this->dispatcher->addSubscriber($subscriber);
-        $this->assertCount(1, $this->dispatcher->getListeners(self::EVENT_FOOL1));
-        $this->assertCount(1, $this->dispatcher->getListeners(self::EVENT_FOOL2));
-        $this->dispatcher->removeSubscriber($subscriber);
-        $this->assertCount(0, $this->dispatcher->getListeners(self::EVENT_FOOL1));
-        $this->assertCount(0, $this->dispatcher->getListeners(self::EVENT_FOOL2));
+        $dispatcher->addSubscriber($subscriber);
+        $this->assertCount(1, $dispatcher->getListeners('foo'));
+        $this->assertCount(1, $dispatcher->getListeners('bar'));
+        $dispatcher->removeSubscriber($subscriber);
+        $this->assertCount(0, $dispatcher->getListeners('foo'));
+        $this->assertCount(0, $dispatcher->getListeners('bar'));
     }
 
     public function testRemoveAll()
     {
-        $this->dispatcher->removeAll();
-        $this->dispatcher->addSubscriber(new Subscriber());
-        $this->dispatcher->removeAll(self::EVENT_FOOL1);
-        $this->assertEmpty($this->dispatcher->getListeners(self::EVENT_FOOL1));
-        $this->assertNotEmpty($this->dispatcher->getListeners(self::EVENT_FOOL2));
+        $dispatcher = new Dispatcher();
+        $dispatcher->addSubscriber(new Subscriber());
+        $dispatcher->removeAll('foo');
+        $this->assertEmpty($dispatcher->getListeners('foo'));
+        $this->assertNotEmpty($dispatcher->getListeners('bar'));
     }
 
     public function testSimpleDispatch()
     {
-        $this->dispatcher->removeAll();
-        $this->counter = 0;
-        $this->dispatcher->bind(self::EVENT_FOOL3, function () {
-            $this->counter++;
+        $dispatcher = new Dispatcher();
+        $counter = 0;
+        $dispatcher->addListener('foo', function () use (&$counter) {
+            $counter++;
         });
-        $this->dispatcher->bind(self::EVENT_FOOL3, function () {
-            $this->counter++;
+        $dispatcher->addListener('foo', function () use (&$counter) {
+            $counter++;
         });
-        $this->dispatcher->dispatch(self::EVENT_FOOL3);
-        $this->assertEquals(2, $this->counter);
+        $dispatcher->dispatch('foo');
+        $this->assertEquals(2, $counter);
     }
 
-    public function testDispatchWithEvent()
+    public function testDispatchEvent()
     {
-        $this->dispatcher->removeAll();
-        $this->dispatcher->bind(self::EVENT_FOOL3, function (Event $event) {
-            $this->assertInstanceOf('Slince\Event\Event', $event);
-            $this->assertInstanceOf('Slince\Event\Tests\DispatcherTest', $event->getSubject());
-            $this->assertEquals(self::EVENT_FOOL3, $event->getName());
-            $this->assertEquals(self::EVENT_FOOL1, $event->getArgument('data'));
+        $dispatcher = new Dispatcher();
+        $dispatcher->addListener('foo', function (Event $event) {
+            $this->assertInstanceOf(Event::class, $event);
+            $this->assertTrue($event->getSubject() === $this);
+            $this->assertEquals('foo', $event->getArgument('data'));
         });
-        $this->dispatcher->dispatch(self::EVENT_FOOL3, new Event(self::EVENT_FOOL3, $this, [
-            'data' => self::EVENT_FOOL1
+        $dispatcher->dispatch(new Event('foo', $this, [
+            'data' => 'foo'
         ]));
     }
 
     public function testDispatcherWithPriority()
     {
-        $this->dispatcher->removeAll();
-        $this->dispatcher->bind(self::EVENT_FOOL3, function (Event $event) {
+        $dispatcher = new Dispatcher();
+        $dispatcher->addListener('foo', function (Event $event) {
             $this->assertEquals(10, $event->getArgument('number'));
             $event->setArgument('number', 100);
         }, Dispatcher::PRIORITY_DEFAULT);
 
-        $this->dispatcher->bind(self::EVENT_FOOL3, function (Event $event) {
+        $dispatcher->addListener('foo', function (Event $event) {
             $this->assertEquals(100, $event->getArgument('number'));
         }, Dispatcher::PRIORITY_LOW);
 
-        $this->dispatcher->bind(self::EVENT_FOOL3, function (Event $event) {
+        $dispatcher->addListener('foo', function (Event $event) {
             $this->assertEquals(0, $event->getArgument('number'));
             $event->setArgument('number', 10);
         }, Dispatcher::PRIORITY_HIGH);
 
-        $this->dispatcher->dispatch(self::EVENT_FOOL3, new Event(self::EVENT_FOOL3, $this, [
+        $dispatcher->dispatch(new Event('foo', $this, [
             'number' => 0
         ]));
     }
 
     public function testDispatchStopPropagation()
     {
-        $this->dispatcher->removeAll();
-        $this->dispatcher->bind(self::EVENT_FOOL3, function (Event $event) {
+        $dispatcher = new Dispatcher();
+        $dispatcher->addListener('foo', function (Event $event) {
             $this->assertEquals(0, $event->getArgument('number'));
             $event->setArgument('number', 10);
             $event->stopPropagation();
         });
-        $this->dispatcher->bind(self::EVENT_FOOL3, function (Event $event) {
+        $dispatcher->addListener('foo', function (Event $event) {
             $event->setArgument('number', 100);
         });
-        $event = new Event(self::EVENT_FOOL3, $this, [
+        $event = new Event('foo', $this, [
             'number' => 0
         ]);
-        $this->dispatcher->dispatch(self::EVENT_FOOL3, $event);
+        $dispatcher->dispatch('foo', $event);
         $this->assertEquals(10, $event->getArgument('number'));
-    }
-}
-
-class Listener implements ListenerInterface
-{
-
-    public function handle(Event $event)
-    {
-        throw new \Exception('Propagation Stop');
     }
 }
 
@@ -195,17 +147,17 @@ class Subscriber implements SubscriberInterface
     public function getEvents()
     {
         return [
-            DispatcherTest::EVENT_FOOL1 => 'onFool1',
-            DispatcherTest::EVENT_FOOL2 => 'onFool2',
+            'foo' => 'onFoo',
+            'bar' => 'onBar',
         ];
     }
 
-    public function onFool1()
+    public function onFoo()
     {
         return true;
     }
 
-    public function onFool2()
+    public function onBar()
     {
         return true;
     }
