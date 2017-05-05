@@ -27,19 +27,10 @@ interface DispatcherInterface
 
     /**
      * Dispatches an event to all registered listeners.
-     * @param string $eventName
+     * @param string|Event $eventName
      * @param Event $event
      */
     public function dispatch($eventName, Event $event = null);
-
-    /**
-     * Registries a callable-listener for the event
-     * @param string $eventName
-     * @param ListenerInterface|callable $listener
-     * @param int $priority
-     * @deprecated Use addListener instead
-     */
-    public function bind($eventName, $listener, $priority = self::PRIORITY_DEFAULT);
 
     /**
      * Registries a listener for the event
@@ -54,14 +45,6 @@ interface DispatcherInterface
      * @param SubscriberInterface $subscriber
      */
     public function addSubscriber(SubscriberInterface $subscriber);
-
-    /**
-     * Removes a callable-listener from the specified event
-     * @param string $eventName
-     * @param ListenerInterface|callable $listener
-     * @deprecated Use removeListener instead
-     */
-    public function unbind($eventName, $listener);
 
     /**
      * Removes a listener from the specified event
@@ -80,12 +63,12 @@ interface DispatcherInterface
      * Removes all listeners from the specified event
      * @param string $eventName
      */
-    public function removeAll($eventName = null);
+    public function removeAllListeners($eventName = null);
 
     /**
      * Checks whether the listener is existed for the event
      * @param string $eventName
-     * @param mixed $listener
+     * @param ListenerInterface|callable $listener
      * @return boolean
      */
     public function hasListener($eventName, $listener);

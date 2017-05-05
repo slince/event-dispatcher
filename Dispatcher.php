@@ -22,10 +22,10 @@ class Dispatcher implements DispatcherInterface
     {
         if ($eventName instanceof Event) {
             $event = $eventName;
-        } elseif (is_string($eventName) && is_null($event)) {
+        } elseif (is_null($event)) {
             $event = new Event($eventName, null);
         }
-        if (!empty($this->listeners[$event->getName()])) {
+        if (isset($this->listeners[$event->getName()])) {
             foreach ($this->listeners[$event->getName()] as $listener) {
                 if ($event->isPropagationStopped()) {
                     break;
@@ -36,7 +36,11 @@ class Dispatcher implements DispatcherInterface
     }
 
     /**
-     * {@inheritdoc}
+     * Registries a callable-listener for the event
+     * @param string $eventName
+     * @param ListenerInterface|callable $listener
+     * @param int $priority
+     * @deprecated Use addListener instead
      */
     public function bind($eventName, $listener, $priority = self::PRIORITY_DEFAULT)
     {
@@ -71,7 +75,10 @@ class Dispatcher implements DispatcherInterface
     }
 
     /**
-     * {@inheritdoc}
+     * Removes a callable-listener from the specified event
+     * @param string $eventName
+     * @param ListenerInterface|callable $listener
+     * @deprecated Use removeListener instead
      */
     public function unbind($eventName, $listener)
     {
@@ -103,9 +110,19 @@ class Dispatcher implements DispatcherInterface
     }
 
     /**
-     * {@inheritdoc}
+     * Removes all listeners from the specified event
+     * @param string $eventName
+     * @deprecated Use removeAllListeners instead
      */
     public function removeAll($eventName = null)
+    {
+        $this->removeAllListeners($eventName);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function removeAllListeners($eventName = null)
     {
         if (!is_null($eventName) && isset($this->listeners[$eventName])) {
             $this->listeners[$eventName]->clear();

@@ -23,6 +23,15 @@ class DispatcherTest extends TestCase
         $this->assertCount(1, $dispatcher->getListeners('foo'));
     }
 
+    public function testHasListener()
+    {
+        $dispatcher = new Dispatcher();
+        $listener = new FooListener();
+        $this->assertFalse($dispatcher->hasListener('foo', $listener));
+        $dispatcher->addListener('foo', $listener);
+        $this->assertTrue($dispatcher->hasListener('foo', $listener));
+    }
+
     public function testAddSubscriber()
     {
         $dispatcher = new Dispatcher();
@@ -31,7 +40,7 @@ class DispatcherTest extends TestCase
         $this->assertCount(1, $dispatcher->getListeners('bar'));
     }
 
-    public function tes2tRemoveListener()
+    public function testRemoveListener()
     {
         $dispatcher = new Dispatcher();
         $listener = new FooListener();
@@ -41,7 +50,7 @@ class DispatcherTest extends TestCase
         $this->assertCount(0, $dispatcher->getListeners('bar'));
     }
 
-    public function tes2tRemoveCallableListener()
+    public function testRemoveCallableListener()
     {
         $dispatcher = new Dispatcher();
         $callback = function () {
@@ -65,13 +74,22 @@ class DispatcherTest extends TestCase
         $this->assertCount(0, $dispatcher->getListeners('bar'));
     }
 
-    public function testRemoveAll()
+    public function testRemoveEventAllListeners()
     {
         $dispatcher = new Dispatcher();
         $dispatcher->addSubscriber(new Subscriber());
-        $dispatcher->removeAll('foo');
-        $this->assertEmpty($dispatcher->getListeners('foo'));
+        $dispatcher->removeAllListeners('foo');
+        $this->assertCount(0, $dispatcher->getListeners('foo'));
         $this->assertNotEmpty($dispatcher->getListeners('bar'));
+    }
+
+    public function testRemoveAllListeners()
+    {
+        $dispatcher = new Dispatcher();
+        $dispatcher->addSubscriber(new Subscriber());
+        $dispatcher->removeAllListeners();
+        $this->assertCount(0, $dispatcher->getListeners('foo'));
+        $this->assertCount(0, $dispatcher->getListeners('foo'));
     }
 
     public function testSimpleDispatch()
