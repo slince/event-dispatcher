@@ -38,9 +38,9 @@ class Dispatcher implements DispatcherInterface
     /**
      * {@inheritdoc}
      */
-    public function bind($eventName, $callable, $priority = self::PRIORITY_DEFAULT)
+    public function bind($eventName, $listener, $priority = self::PRIORITY_DEFAULT)
     {
-        $this->addListener($eventName, $callable, $priority);
+        $this->addListener($eventName, $listener, $priority);
     }
 
     /**
@@ -73,9 +73,9 @@ class Dispatcher implements DispatcherInterface
     /**
      * {@inheritdoc}
      */
-    public function unbind($eventName, $callable)
+    public function unbind($eventName, $listener)
     {
-        $this->removeListener($eventName, $callable);
+        $this->removeListener($eventName, $listener);
     }
 
     /**

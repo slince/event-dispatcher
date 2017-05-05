@@ -35,11 +35,11 @@ interface DispatcherInterface
     /**
      * Registries a callable-listener for the event
      * @param string $eventName
-     * @param mixed $callable
+     * @param ListenerInterface|callable $listener
      * @param int $priority
      * @deprecated Use addListener instead
      */
-    public function bind($eventName, $callable, $priority = self::PRIORITY_DEFAULT);
+    public function bind($eventName, $listener, $priority = self::PRIORITY_DEFAULT);
 
     /**
      * Registries a listener for the event
@@ -58,10 +58,10 @@ interface DispatcherInterface
     /**
      * Removes a callable-listener from the specified event
      * @param string $eventName
-     * @param mixed $callable
+     * @param ListenerInterface|callable $listener
      * @deprecated Use removeListener instead
      */
-    public function unbind($eventName, $callable);
+    public function unbind($eventName, $listener);
 
     /**
      * Removes a listener from the specified event

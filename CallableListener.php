@@ -55,7 +55,7 @@ class CallableListener implements ListenerInterface
 
     /**
      * Finds the listener from the collection by its callable
-     * @param mixed $callable
+     * @param callable $callable
      * @return CallableListener|false
      */
     public static function findByCallable($callable)
