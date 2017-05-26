@@ -87,7 +87,7 @@ class Event
     }
 
     /**
-     * Gets a argument by its key
+     * Gets the argument by its key
      * @param string $name
      * @return mixed
      */
@@ -97,7 +97,7 @@ class Event
     }
 
     /**
-     * Sets many arguments
+     * Sets array of arguments
      * @param array $arguments
      */
     public function setArguments(array $arguments)

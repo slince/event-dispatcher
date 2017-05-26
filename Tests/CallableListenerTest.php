@@ -29,5 +29,8 @@ class CallableListenerTest extends TestCase
             return true;
         };
         $this->assertTrue(CallableListener::createFromCallable($callback) === CallableListener::findByCallable($callback));
+        $this->assertFalse(CallableListener::findByCallable(function(){
+
+        }));
     }
 }

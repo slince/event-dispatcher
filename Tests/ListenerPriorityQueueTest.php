@@ -29,6 +29,7 @@ class ListenerPriorityQueueTest extends TestCase
         $listener = new FooListener();
         $queue->insert($listener, Dispatcher::PRIORITY_DEFAULT);
         $this->assertTrue($queue->contains($listener));
+        $queue->insert(new FooListener(), Dispatcher::PRIORITY_DEFAULT);
         $queue->detach($listener);
         $this->assertFalse($queue->contains($listener));
     }

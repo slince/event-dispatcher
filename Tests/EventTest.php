@@ -6,20 +6,10 @@ use Slince\Event\Event;
 
 class EventTest extends TestCase
 {
-    protected function createEvent($name)
-    {
-        return new Event($name);
-    }
-
-    public function testGetName()
+    public function testName()
     {
         $event = new Event('foo');
         $this->assertEquals('foo', $event->getName());
-    }
-
-    public function testSetName()
-    {
-        $event = new Event('foo');
         $event->setName('bar');
         $this->assertEquals('bar', $event->getName());
     }
@@ -31,6 +21,14 @@ class EventTest extends TestCase
         $event->setArgument('foo', 'bar');
         $this->assertCount(1, $event->getArguments());
         $this->assertEquals('bar', $event->getArgument('foo'));
+        $event->setArguments([
+            'foo' => 'bar',
+            'bar' => 'baz'
+        ]);
+        $this->assertEquals([
+            'foo' => 'bar',
+            'bar' => 'baz'
+        ], $event->getArguments());
     }
 
     public function testStopPropagation()

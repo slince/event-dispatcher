@@ -5,6 +5,7 @@ use PHPUnit\Framework\TestCase;
 use Slince\Event\CallableListener;
 use Slince\Event\Dispatcher;
 use Slince\Event\Event;
+use Slince\Event\Exception\InvalidArgumentException;
 use Slince\Event\SubscriberInterface;
 
 class DispatcherTest extends TestCase
@@ -21,6 +22,8 @@ class DispatcherTest extends TestCase
         $this->assertEmpty($dispatcher->getListeners('foo'));
         $dispatcher->addListener('foo', new FooListener());
         $this->assertCount(1, $dispatcher->getListeners('foo'));
+        $this->setExpectedException(InvalidArgumentException::class);
+        $dispatcher->addListener('foo', 'invalid-listener');
     }
 
     public function testHasListener()
@@ -30,6 +33,24 @@ class DispatcherTest extends TestCase
         $this->assertFalse($dispatcher->hasListener('foo', $listener));
         $dispatcher->addListener('foo', $listener);
         $this->assertTrue($dispatcher->hasListener('foo', $listener));
+
+        $callback = function(){
+        };
+        $dispatcher->addListener('bar', $callback);
+        $this->assertTrue($dispatcher->hasListener('bar', $callback));
+    }
+
+    public function testGetListeners()
+    {
+        $dispatcher = new Dispatcher();
+        $listener = new FooListener();
+        $dispatcher->addListener('foo', $listener);
+        $callback = function(){};
+        $dispatcher->addListener('bar', $callback);
+        $this->assertEquals([
+            $listener,
+            CallableListener::findByCallable($callback)
+        ],$dispatcher->getListeners());
     }
 
     public function testAddSubscriber()
