@@ -73,7 +73,7 @@ class DispatcherTest extends TestCase
 
         $dispatcher->removeListener('bar', function(){});
         $this->assertCount(1, $dispatcher->getListeners('bar'));
-        $dispatcher->removeListener('bar', function(){});
+        $dispatcher->removeListener('foo', function(){});
         $this->assertCount(1, $dispatcher->getListeners('bar'));
     }
 
