@@ -69,6 +69,12 @@ class DispatcherTest extends TestCase
         $this->assertCount(1, $dispatcher->getListeners('bar'));
         $dispatcher->removeListener('bar', $listener);
         $this->assertCount(0, $dispatcher->getListeners('bar'));
+        $dispatcher->addListener('bar', $listener);
+
+        $dispatcher->removeListener('bar', function(){});
+        $this->assertCount(1, $dispatcher->getListeners('bar'));
+        $dispatcher->removeListener('bar', function(){});
+        $this->assertCount(1, $dispatcher->getListeners('bar'));
     }
 
     public function testRemoveCallableListener()
