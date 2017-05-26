@@ -7,14 +7,15 @@
 
 ### Installation
 
-```
+```bash
 composer require slince/event
 ```
+
 ### Usage
 
 #### Creates a event dispatcher
 
-```
+```php
 $dispatcher = new Slince\Event\Dispatcher();
 ```
 
@@ -24,7 +25,7 @@ There are two types of listeners: `callable` and `Slince\Event\Listener`
  
 - `Slince\Event\Listener` 
 
-```
+```php
 use Slince\Event\ListenerInterface;
 
 class FooListener implements ListenerInterface
@@ -40,15 +41,15 @@ $dispatcher->addListener('foo-event-name', new FooListener());
 
 - `callable`
 
-```
+```php
 $dispatcher->addListener('foo-event-name', function(Event $event){
     //do something
 });
 ```
 
-#### Add an subscriber
+#### Add a subscriber
 
-```
+```php
 use Slince\Event\SubscriberInterface;
 
 class FooSubscriber implements SubscriberInterface
@@ -79,13 +80,13 @@ $dispatcher->addSubscriber(new FooSubscriber());
 
 Just provides the event name.
 
-```
+```php
 $dispatcher->dispatch('foo-event-name');
 ```
 
 You can also dispatch with an event instance.
 
-```
+```php
 $dispatcher->dispatch(new Event('foo-event-name'));
 ```
 
@@ -93,7 +94,7 @@ $dispatcher->dispatch(new Event('foo-event-name'));
 
 You can call `stopPropagation` to stop event propagation on the event instance.
 
-```
+```php
 $dispatcher->addListener('foo-event-name', function(Event $event){
     $event->stopPropagation();
 });
@@ -107,7 +108,7 @@ $dispatcher->dispatch('foo-event-name');
 
 Checks whether propagation is stopped
  
- ```
+ ```php
  $event = new Event('foo-event-name');
  $dispatcher->dispatch($event);
  
