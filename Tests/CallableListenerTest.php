@@ -1,9 +1,9 @@
 <?php
 
-namespace Slince\Event\Tests;
+namespace Slince\EventDispatcher\Tests;
 
 use PHPUnit\Framework\TestCase;
-use Slince\Event\CallableListener;
+use Slince\EventDispatcher\CallableListener;
 
 class CallableListenerTest extends TestCase
 {

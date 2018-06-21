@@ -1,13 +1,13 @@
 <?php
 
-namespace Slince\Event\Tests;
+namespace Slince\EventDispatcher\Tests;
 
 use PHPUnit\Framework\TestCase;
-use Slince\Event\CallableListener;
-use Slince\Event\Dispatcher;
-use Slince\Event\Event;
-use Slince\Event\Exception\InvalidArgumentException;
-use Slince\Event\SubscriberInterface;
+use Slince\EventDispatcher\CallableListener;
+use Slince\EventDispatcher\Dispatcher;
+use Slince\EventDispatcher\Event;
+use Slince\EventDispatcher\Exception\InvalidArgumentException;
+use Slince\EventDispatcher\SubscriberInterface;
 
 class DispatcherTest extends TestCase
 {

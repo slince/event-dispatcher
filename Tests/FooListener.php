@@ -1,9 +1,9 @@
 <?php
 
-namespace Slince\Event\Tests;
+namespace Slince\EventDispatcher\Tests;
 
-use Slince\Event\ListenerInterface;
-use Slince\Event\Event;
+use Slince\EventDispatcher\ListenerInterface;
+use Slince\EventDispatcher\Event;
 
 class FooListener implements ListenerInterface
 {

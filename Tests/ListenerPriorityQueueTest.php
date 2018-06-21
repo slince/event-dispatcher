@@ -1,9 +1,9 @@
 <?php
 
-namespace Slince\Event\Tests;
+namespace Slince\EventDispatcher\Tests;
 
-use Slince\Event\Dispatcher;
-use Slince\Event\ListenerPriorityQueue;
+use Slince\EventDispatcher\Dispatcher;
+use Slince\EventDispatcher\ListenerPriorityQueue;
 use PHPUnit\Framework\TestCase;
 
 class ListenerPriorityQueueTest extends TestCase

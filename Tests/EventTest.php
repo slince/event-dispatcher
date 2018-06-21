@@ -1,9 +1,9 @@
 <?php
 
-namespace Slince\Event\Tests;
+namespace Slince\EventDispatcher\Tests;
 
 use PHPUnit\Framework\TestCase;
-use Slince\Event\Event;
+use Slince\EventDispatcher\Event;
 
 class EventTest extends TestCase
 {

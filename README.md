@@ -18,17 +18,17 @@ $ composer require slince/event-dispatcher
 #### Creates a event dispatcher
 
 ```php
-$dispatcher = new Slince\Event\Dispatcher();
+$dispatcher = new Slince\EventDispatcher\Dispatcher();
 ```
 
 #### Adds a listener for the specified event
 
-There are two types of listeners: `callable` and `Slince\Event\Listener` 
+There are two types of listeners: `callable` and `Slince\EventDispatcher\Listener` 
  
-- `Slince\Event\Listener` 
+- `Slince\EventDispatcher\Listener` 
 
 ```php
-use Slince\Event\ListenerInterface;
+use Slince\EventDispatcher\ListenerInterface;
 
 class FooListener implements ListenerInterface
 {
@@ -52,7 +52,7 @@ $dispatcher->addListener('foo-event-name', function(Event $event){
 #### Add a subscriber
 
 ```php
-use Slince\Event\SubscriberInterface;
+use Slince\EventDispatcher\SubscriberInterface;
 
 class FooSubscriber implements SubscriberInterface
 {
