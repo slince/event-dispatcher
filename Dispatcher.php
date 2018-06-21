@@ -1,8 +1,14 @@
 <?php
-/**
- * slince event dispatcher library
- * @author Tao <taosikai@yeah.net>
+
+/*
+ * This file is part of the slince/event package.
+ *
+ * (c) Slince <taosikai@yeah.net>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
+
 namespace Slince\Event;
 
 use Slince\Event\Exception\InvalidArgumentException;
@@ -10,7 +16,8 @@ use Slince\Event\Exception\InvalidArgumentException;
 class Dispatcher implements DispatcherInterface
 {
     /**
-     * Array of listeners
+     * Array of listeners.
+     *
      * @var ListenerPriorityQueue[]
      */
     protected $listeners = [];
@@ -18,9 +25,9 @@ class Dispatcher implements DispatcherInterface
     /**
      * {@inheritdoc}
      */
-    public function dispatch($eventName, Event $event = null)
+    public function dispatch($eventName, EventInterface $event = null)
     {
-        if ($eventName instanceof Event) {
+        if ($eventName instanceof EventInterface) {
             $event = $eventName;
         } elseif (is_null($event)) {
             $event = new Event($eventName, null);
@@ -33,18 +40,6 @@ class Dispatcher implements DispatcherInterface
                 call_user_func([$listener, 'handle'], $event);
             }
         }
-    }
-
-    /**
-     * Registries a callable-listener for the event
-     * @param string $eventName
-     * @param ListenerInterface|callable $listener
-     * @param int $priority
-     * @deprecated Use addListener instead
-     */
-    public function bind($eventName, $listener, $priority = self::PRIORITY_DEFAULT)
-    {
-        $this->addListener($eventName, $listener, $priority);
     }
 
     /**
@@ -69,20 +64,9 @@ class Dispatcher implements DispatcherInterface
      */
     public function addSubscriber(SubscriberInterface $subscriber)
     {
-        foreach ($subscriber->getEvents() as $eventName => $action) {
+        foreach ($subscriber->getSubscribedEvents() as $eventName => $action) {
             $this->addListener($eventName, [$subscriber, $action]);
         }
-    }
-
-    /**
-     * Removes a callable-listener from the specified event
-     * @param string $eventName
-     * @param ListenerInterface|callable $listener
-     * @deprecated Use removeListener instead
-     */
-    public function unbind($eventName, $listener)
-    {
-        $this->removeListener($eventName, $listener);
     }
 
     /**
@@ -93,7 +77,7 @@ class Dispatcher implements DispatcherInterface
         if (empty($this->listeners[$eventName])) {
             return;
         }
-        if (is_callable($listener) && ($listener = CallableListener::findByCallable($listener)) === false) {
+        if (is_callable($listener) && false === ($listener = CallableListener::findByCallable($listener))) {
             return;
         }
         $this->listeners[$eventName]->detach($listener);
@@ -104,19 +88,9 @@ class Dispatcher implements DispatcherInterface
      */
     public function removeSubscriber(SubscriberInterface $subscriber)
     {
-        foreach ($subscriber->getEvents() as $eventName => $action) {
+        foreach ($subscriber->getSubscribedEvents() as $eventName => $action) {
             $this->removeListener($eventName, [$subscriber, $action]);
         }
-    }
-
-    /**
-     * Removes all listeners from the specified event
-     * @param string $eventName
-     * @deprecated Use removeAllListeners instead
-     */
-    public function removeAll($eventName = null)
-    {
-        $this->removeAllListeners($eventName);
     }
 
     /**
@@ -144,6 +118,7 @@ class Dispatcher implements DispatcherInterface
         if (is_callable($listener)) {
             $listener = CallableListener::findByCallable($listener);
         }
+
         return $this->listeners[$eventName]->contains($listener);
     }
 
@@ -160,6 +135,7 @@ class Dispatcher implements DispatcherInterface
             foreach ($this->listeners as $queue) {
                 $listeners = array_merge($listeners, $queue->all());
             }
+
             return $listeners;
         }
     }

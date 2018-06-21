@@ -6,7 +6,7 @@
          bootstrap="vendor/autoload.php">
 
     <testsuites>
-        <testsuite name="Slince Test Suite">
+        <testsuite name="Slince Event Dispatcher Test Suite">
             <directory>./Tests/</directory>
         </testsuite>
     </testsuites>

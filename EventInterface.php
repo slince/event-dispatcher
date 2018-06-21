@@ -11,12 +11,12 @@
 
 namespace Slince\Event;
 
-interface SubscriberInterface
+interface EventInterface
 {
     /**
-     * Returns an array of event names this subscriber wants to listen to.
+     * Gets the event name.
      *
-     * @return array
+     * @return string
      */
-    public static function getSubscribedEvents();
+    public function getName();
 }

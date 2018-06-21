@@ -1,4 +1,5 @@
 <?php
+
 namespace Slince\Event\Tests;
 
 use Slince\Event\ListenerInterface;

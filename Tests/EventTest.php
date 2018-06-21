@@ -1,4 +1,5 @@
 <?php
+
 namespace Slince\Event\Tests;
 
 use PHPUnit\Framework\TestCase;
@@ -23,11 +24,11 @@ class EventTest extends TestCase
         $this->assertEquals('bar', $event->getArgument('foo'));
         $event->setArguments([
             'foo' => 'bar',
-            'bar' => 'baz'
+            'bar' => 'baz',
         ]);
         $this->assertEquals([
             'foo' => 'bar',
-            'bar' => 'baz'
+            'bar' => 'baz',
         ], $event->getArguments());
     }
 

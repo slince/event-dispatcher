@@ -1,20 +1,28 @@
 <?php
-/**
- * slince event dispatcher library
- * @author Tao <taosikai@yeah.net>
+
+/*
+ * This file is part of the slince/event package.
+ *
+ * (c) Slince <taosikai@yeah.net>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
+
 namespace Slince\Event;
 
 class CallableListener implements ListenerInterface
 {
     /**
-     * The callable callback
+     * The callable callback.
+     *
      * @var callable
      */
     protected $callable;
 
     /**
-     * Array of callable-listeners
+     * Array of callable-listeners.
+     *
      * @var array
      */
     protected static $listeners = [];
@@ -26,7 +34,8 @@ class CallableListener implements ListenerInterface
     }
 
     /**
-     * Gets callback
+     * Gets callback.
+     *
      * @return callable
      */
     public function getCallable()
@@ -43,19 +52,24 @@ class CallableListener implements ListenerInterface
     }
 
     /**
-     * Creates a callable-listener
+     * Creates a callable-listener.
+     *
      * @param callable $callable
+     *
      * @return CallableListener
      */
     public static function createFromCallable($callable)
     {
         $listener = new static($callable);
+
         return $listener;
     }
 
     /**
-     * Finds the listener from the collection by its callable
+     * Finds the listener from the collection by its callable.
+     *
      * @param callable $callable
+     *
      * @return CallableListener|false
      */
     public static function findByCallable($callable)
@@ -65,11 +79,12 @@ class CallableListener implements ListenerInterface
                 return $listener;
             }
         }
+
         return false;
     }
 
     /**
-     * Removes all registered callable-listeners
+     * Removes all registered callable-listeners.
      */
     public static function clearListeners()
     {

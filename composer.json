@@ -1,6 +1,6 @@
 {
-    "name": "slince/event",
-    "description": "The event dispatcher",
+    "name": "slince/event-dispatcher",
+    "description": "Event dispatcher package",
     "keywords": ["event", "event dispatcher", "emitter", "listener", "subscriber", "observer pattern"],
     "authors": [
         {
@@ -10,14 +10,14 @@
     ],
     "license": "MIT",
     "require": {
-        "php": ">=5.5.9"
+        "php": ">=5.6.0"
     },
     "require-dev": {
-        "phpunit/phpunit": "^4.0"
+        "phpunit/phpunit": "^5.0|^6.0"
     },
     "autoload": {
         "psr-4": {
-          "Slince\\Event\\": ""
+            "Slince\\Event\\": ""
         }
     },
     "minimum-stability": "stable"

@@ -1,4 +1,5 @@
 <?php
+
 namespace Slince\Event\Tests;
 
 use PHPUnit\Framework\TestCase;
@@ -22,7 +23,7 @@ class DispatcherTest extends TestCase
         $this->assertEmpty($dispatcher->getListeners('foo'));
         $dispatcher->addListener('foo', new FooListener());
         $this->assertCount(1, $dispatcher->getListeners('foo'));
-        $this->setExpectedException(InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $dispatcher->addListener('foo', 'invalid-listener');
     }
 
@@ -49,7 +50,7 @@ class DispatcherTest extends TestCase
         $dispatcher->addListener('bar', $callback);
         $this->assertEquals([
             $listener,
-            CallableListener::findByCallable($callback)
+            CallableListener::findByCallable($callback),
         ],$dispatcher->getListeners());
     }
 
@@ -124,10 +125,10 @@ class DispatcherTest extends TestCase
         $dispatcher = new Dispatcher();
         $counter = 0;
         $dispatcher->addListener('foo', function () use (&$counter) {
-            $counter++;
+            ++$counter;
         });
         $dispatcher->addListener('foo', function () use (&$counter) {
-            $counter++;
+            ++$counter;
         });
         $dispatcher->dispatch('foo');
         $this->assertEquals(2, $counter);
@@ -142,7 +143,7 @@ class DispatcherTest extends TestCase
             $this->assertEquals('foo', $event->getArgument('data'));
         });
         $dispatcher->dispatch(new Event('foo', $this, [
-            'data' => 'foo'
+            'data' => 'foo',
         ]));
     }
 
@@ -164,7 +165,7 @@ class DispatcherTest extends TestCase
         }, Dispatcher::PRIORITY_HIGH);
 
         $dispatcher->dispatch(new Event('foo', $this, [
-            'number' => 0
+            'number' => 0,
         ]));
     }
 
@@ -180,7 +181,7 @@ class DispatcherTest extends TestCase
             $event->setArgument('number', 100);
         });
         $event = new Event('foo', $this, [
-            'number' => 0
+            'number' => 0,
         ]);
         $dispatcher->dispatch('foo', $event);
         $this->assertEquals(10, $event->getArgument('number'));
@@ -189,7 +190,7 @@ class DispatcherTest extends TestCase
 
 class Subscriber implements SubscriberInterface
 {
-    public function getEvents()
+    public static function getSubscribedEvents()
     {
         return [
             'foo' => 'onFoo',

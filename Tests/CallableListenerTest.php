@@ -1,4 +1,5 @@
 <?php
+
 namespace Slince\Event\Tests;
 
 use PHPUnit\Framework\TestCase;
@@ -30,7 +31,6 @@ class CallableListenerTest extends TestCase
         };
         $this->assertTrue(CallableListener::createFromCallable($callback) === CallableListener::findByCallable($callback));
         $this->assertFalse(CallableListener::findByCallable(function(){
-
         }));
     }
 }

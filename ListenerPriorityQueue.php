@@ -1,8 +1,14 @@
 <?php
-/**
- * slince event dispatcher library
- * @author Tao <taosikai@yeah.net>
+
+/*
+ * This file is part of the slince/event package.
+ *
+ * (c) Slince <taosikai@yeah.net>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
+
 namespace Slince\Event;
 
 class ListenerPriorityQueue implements \IteratorAggregate
@@ -24,9 +30,10 @@ class ListenerPriorityQueue implements \IteratorAggregate
     }
 
     /**
-     * Insert an listener to the queue
+     * Insert an listener to the queue.
+     *
      * @param ListenerInterface $listener
-     * @param int $priority
+     * @param int               $priority
      */
     public function insert(ListenerInterface $listener, $priority)
     {
@@ -35,7 +42,8 @@ class ListenerPriorityQueue implements \IteratorAggregate
     }
 
     /**
-     * Removes an listener from the queue
+     * Removes an listener from the queue.
+     *
      * @param ListenerInterface $listener
      */
     public function detach(ListenerInterface $listener)
@@ -47,7 +55,7 @@ class ListenerPriorityQueue implements \IteratorAggregate
     }
 
     /**
-     * Clears the queue
+     * Clears the queue.
      */
     public function clear()
     {
@@ -56,7 +64,8 @@ class ListenerPriorityQueue implements \IteratorAggregate
     }
 
     /**
-     * Clears the queue
+     * Clears the queue.
+     *
      * @deprecated use clear instead
      */
     public function flush()
@@ -65,8 +74,10 @@ class ListenerPriorityQueue implements \IteratorAggregate
     }
 
     /**
-     * Checks whether the queue contains the listener
+     * Checks whether the queue contains the listener.
+     *
      * @param ListenerInterface $listener
+     *
      * @return boolean
      */
     public function contains(ListenerInterface $listener)
@@ -75,7 +86,8 @@ class ListenerPriorityQueue implements \IteratorAggregate
     }
 
     /**
-     * Gets all listeners
+     * Gets all listeners.
+     *
      * @return ListenerInterface[]
      */
     public function all()
@@ -84,11 +96,13 @@ class ListenerPriorityQueue implements \IteratorAggregate
         foreach ($this->getIterator() as $listener) {
             $listeners[] = $listener;
         }
+
         return $listeners;
     }
 
     /**
-     * Gets all listeners
+     * Gets all listeners.
+     *
      * @deprecated use all instead
      */
     public function getAll()
@@ -97,7 +111,8 @@ class ListenerPriorityQueue implements \IteratorAggregate
     }
 
     /**
-     * Clones and returns a iterator
+     * Clones and returns a iterator.
+     *
      * @return \SplPriorityQueue
      */
     public function getIterator()
@@ -106,11 +121,12 @@ class ListenerPriorityQueue implements \IteratorAggregate
         if (!$queue->isEmpty()) {
             $queue->top();
         }
+
         return $queue;
     }
 
     /**
-     * Refreshes the status of the queue
+     * Refreshes the status of the queue.
      */
     protected function refreshQueue()
     {

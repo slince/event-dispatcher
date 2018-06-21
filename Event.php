@@ -1,32 +1,42 @@
 <?php
-/**
- * slince event dispatcher library
- * @author Tao <taosikai@yeah.net>
+
+/*
+ * This file is part of the slince/event package.
+ *
+ * (c) Slince <taosikai@yeah.net>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
+
 namespace Slince\Event;
 
-class Event
+class Event implements EventInterface
 {
     /**
-     * The event name
+     * The event name.
+     *
      * @var string
      */
     protected $name;
 
     /**
-     * The subject
+     * The subject.
+     *
      * @var object
      */
     protected $subject;
 
     /**
-     * Array of arguments
+     * Array of arguments.
+     *
      * @var array
      */
     protected $arguments = [];
 
     /**
-     * Whether the propagation is stopped
+     * Whether the propagation is stopped.
+     *
      * @var boolean
      */
     protected $propagationStopped = false;
@@ -38,9 +48,9 @@ class Event
         $this->arguments = $arguments;
     }
 
-
     /**
-     * Gets the  event name
+     * Gets the  event name.
+     *
      * @return string
      */
     public function getName()
@@ -49,7 +59,8 @@ class Event
     }
 
     /**
-     * Sets the event name
+     * Sets the event name.
+     *
      * @param $name
      */
     public function setName($name)
@@ -57,9 +68,9 @@ class Event
         $this->name = $name;
     }
 
-
     /**
-     * Sets the subject
+     * Sets the subject.
+     *
      * @param $subject
      */
     public function setSubject($subject)
@@ -68,7 +79,8 @@ class Event
     }
 
     /**
-     * Gets the subject
+     * Gets the subject.
+     *
      * @return null|object
      */
     public function getSubject()
@@ -77,9 +89,10 @@ class Event
     }
 
     /**
-     * Sets a argument to the event
+     * Sets a argument to the event.
+     *
      * @param string $name
-     * @param mixed $value
+     * @param mixed  $value
      */
     public function setArgument($name, $value)
     {
@@ -87,8 +100,10 @@ class Event
     }
 
     /**
-     * Gets the argument by its key
+     * Gets the argument by its key.
+     *
      * @param string $name
+     *
      * @return mixed
      */
     public function getArgument($name)
@@ -97,7 +112,8 @@ class Event
     }
 
     /**
-     * Sets array of arguments
+     * Sets array of arguments.
+     *
      * @param array $arguments
      */
     public function setArguments(array $arguments)
@@ -106,7 +122,8 @@ class Event
     }
 
     /**
-     * Gets all arguments
+     * Gets all arguments.
+     *
      * @return array
      */
     public function getArguments()
@@ -115,17 +132,20 @@ class Event
     }
 
     /**
-     * Stop event propagation
+     * Stop event propagation.
+     *
      * @return $this
      */
     public function stopPropagation()
     {
         $this->propagationStopped = true;
+
         return $this;
     }
 
     /**
      * Checks whether propagation was stopped.
+     *
      * @return bool
      */
     public function isPropagationStopped()
