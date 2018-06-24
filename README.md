@@ -56,7 +56,7 @@ use Slince\EventDispatcher\SubscriberInterface;
 
 class FooSubscriber implements SubscriberInterface
 {
-     public function getEvents(Event $event)
+     public static function getSubscribedEvents(Event $event)
      {
         return [
             'foo' => 'onFoo',
